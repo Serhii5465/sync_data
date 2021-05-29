@@ -1,0 +1,6 @@
+alias relb='source ~/.bashrc'
+alias clc='clear'
+alias proj='cd /cygdrive/d/projects/'
+alias ssh='~/scripts/ssh-ident'
+alias backup_photos='~/scripts/backup_photos/backup.sh'
+alias backup_portable_prog_disk_C='rsync -avhzP --stats --out-format="%t %f %''b" --ignore-existing --del /cygdrive/c/portable/ /cygdrive/d/backups/portable_prog_drive_C/'
