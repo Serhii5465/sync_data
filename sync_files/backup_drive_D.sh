@@ -1,14 +1,14 @@
 #!/bin/bash
 
-UUID_DEST_DRIVE_1=EE48C79C48C76247  
-UUID_DEST_DRIVE_2=6C80AE9580AE6574
+UUID_DEST_DRIVE_1=B20A20BD0A208109  
+UUID_DEST_DRIVE_2=42D49812D4980A75
 
 NAME_DEV_DEST_DRIVE_1=$(blkid --uuid $UUID_DEST_DRIVE_1) #output example: /dev/sdc3
 NAME_DEV_DEST_DRIVE_2=$(blkid --uuid $UUID_DEST_DRIVE_2) #output example: /dev/sde2
 
 LOGS_DIR=/cygdrive/d/logs
 
-SYNC_DIRS=(backups documents install raisnet)
+SYNC_DIRS=(backups documents install raisnet VirtualBox_VMs)
 
 if [[ ! -d $LOGS_DIR ]]; then
     mkdir -p $LOGS_DIR
@@ -42,29 +42,50 @@ upload ()
 
     local COUNT_SUCCESS_CODE=0
 
-    for i in "${SYNC_DIRS[@]}"; do
+    #test upload files without .vdi 
+    for ((i = 0; i < $((${#SYNC_DIRS[@]}-1)); i++)); 
+    do
         rsync -a --human-readable --progress --stats --verbose \
         --out-format="%t %f %''b" --delete --itemize-changes --dry-run \
-        --exclude=games/ --log-file="$PATH_DIR_ACTUAL_LOG"/"$i".txt $SOURCE/$i $DESTINATION 
-        
+        --exclude=games/ --log-file="$PATH_DIR_ACTUAL_LOG"/"${SYNC_DIRS[$i]}".txt $SOURCE/${SYNC_DIRS[$i]} $DESTINATION 
+
         if [[ "$?" -eq 0 ]]; then
             COUNT_SUCCESS_CODE=$((COUNT_SUCCESS_CODE + 1))
         fi
     done
+    
+    #test upload .vdi files
+    rsync -a --human-readable --progress --stats --verbose \
+    --out-format="%t %f %''b" --delete --itemize-changes --dry-run \
+    --ignore-existing --copy-links --exclude=Snapshots/ --exclude=Logs/ \
+    --log-file="$PATH_DIR_ACTUAL_LOG"/"${SYNC_DIRS[4]}".txt $SOURCE/${SYNC_DIRS[4]} $DESTINATION 
+
+    if [[ "$?" -eq 0 ]]; then
+        COUNT_SUCCESS_CODE=$((COUNT_SUCCESS_CODE + 1))
+    fi
 
     if [[ "$COUNT_SUCCESS_CODE" -lt "${#SYNC_DIRS[@]}" ]]; then
         printf "ПОТРАЧЕНО.ЧЕКАЙ ЛОГИ\nEXIT...."
         exit 1
     fi  
 
-    printf "\n\n\nOK.START UPLOADING\n\n\n"
-    sleep 10
 
-    for i in "${SYNC_DIRS[@]}"; do
+    printf "\n\n\nOK.START UPLOADING\n\n\n"
+    sleep 5
+
+
+    #upload files without .vdi 
+    for ((i = 0; i < $((${#SYNC_DIRS[@]}-1)); i++)); 
+    do
         rsync -a --human-readable --progress --stats --verbose \
         --out-format="%t %f %''b" --delete --itemize-changes \
-        --exclude=games/ $SOURCE/$i $DESTINATION 
+        --exclude=games/ $SOURCE/${SYNC_DIRS[$i]} $DESTINATION 
     done
+
+    #upload .vdi files
+    rsync -a --human-readable --progress --stats --verbose \
+    --out-format="%t %f %''b" --delete --itemize-changes  \
+    --ignore-existing --copy-links --exclude=Snapshots/ --exclude=Logs/ $SOURCE/${SYNC_DIRS[4]} $DESTINATION 
 }
 
 
