@@ -14,7 +14,6 @@ if [[ ! -d $LOGS_DIR ]]; then
     mkdir -p $LOGS_DIR
 fi
 
-
 get_mount_point ()
 {
     local FULL_NAME_BLOCK_DEV=$1 #/dev/sda1
@@ -26,7 +25,6 @@ get_mount_point ()
     local UNIX_MOUNT_POINT=$(cygpath --unix $WINDOWS_MOUNT_POINT) #/cygdrive/d/
     echo "$UNIX_MOUNT_POINT"
 }
-
 
 upload ()
 {
@@ -87,7 +85,6 @@ upload ()
     --out-format="%t %f %''b" --delete --itemize-changes  \
     --ignore-existing --copy-links --exclude=Snapshots/ --exclude=Logs/ $SOURCE/${SYNC_DIRS[4]} $DESTINATION 
 }
-
 
 if [[ -z $NAME_DEV_DEST_DRIVE_1 ]]; then
     printf "Not found drives\nRetrying search...\n\n\n"
