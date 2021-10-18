@@ -1,3 +1,8 @@
+""" Requires python >= 3.7 to work method get_cmd_output 
+Changed in version 3.7:
+Added the capture_output parameter.
+"""
+
 from genericpath import isfile
 import subprocess
 import sys
@@ -44,35 +49,47 @@ def get_mount_point(uuid):
 
 
 # insert into rsync command arguments of source and path log file
-def insert_arg_cmd(command, path_src, sync_dir, uuid_disk, logs_dir):
-    command[len(command) - 2] = path_src + '/' + sync_dir
-    command[len(command) - 3] = '--log-file=' + logs_dir + '/' + uuid_disk + '__TEST_MODE__' + sync_dir + '.txt'
+def insert_arg_cmd(command, path_src, sync_dir, uuid_disk, logs_dir, test_mode):
+    command[len(command) - 2] = path_src + sync_dir
 
+    if (test_mode):
+        command[len(command) - 3] = '--log-file=' + logs_dir + '/' + uuid_disk + '__TEST_MODE__' + sync_dir + '.txt'
+    else:
+        command[len(command) - 3] = '--log-file=' + logs_dir + '/' + uuid_disk + '__' + sync_dir + '.txt'
+
+    
 
 #upload files without .vdi images
-def upload(command, path_src, list_sync_dirs, uuid_disk, logs_dir):
+def upload(command, path_src, list_sync_dirs, uuid_disk, logs_dir, test_mode):
     for i in range(len(list_sync_dirs)):
 
-        insert_arg_cmd(command, path_src, list_sync_dirs[i], uuid_disk, logs_dir)
+        insert_arg_cmd(command, path_src, list_sync_dirs[i], uuid_disk, logs_dir, test_mode)
         code = run_cmd(command)
 
         if (code.returncode != 0):
-           sys.exit('Error')
+           sys.exit('Error\nCheck logs')
 
         
-def upload_vdi(command1, command2, destination):
+def upload_vdi(command1, command2, path_src, sync_dir, uuid_disk, destination, logs_dir, test_mode):
 
-    list_vdi_img = glob.glob(source + '/VirtualBox_VMs/**/*.vdi', recursive=True) # search .vdi files
+    list_vdi_img = glob.glob(path_src + sync_dir + '/**/*.vdi', recursive=True) # search .vdi files
     
     for i in list_vdi_img:
         clip_path_vdi_img = i[11:] # i='/cygdrive/d/VirtualBox_VMs/arch/arch.vdi, clip_path_vdi_img=/VirtualBox_VMs/arch/arch.vdi
 
         print(clip_path_vdi_img)
         out = ''
+        print(destination + clip_path_vdi_img)
 
-        if (os.path.isfile(destination + clip_path_vdi_img)):
+        if (not os.path.isfile(destination + clip_path_vdi_img)):
+            insert_arg_cmd(command1, path_src, sync_dir, uuid_disk, logs_dir, test_mode)
+            #print(command1)
+            print('create')
             out = run_cmd(command1) # create file
         else:
+            insert_arg_cmd(command2, path_src, sync_dir, uuid_disk, logs_dir, test_mode)
+            #print(command2)
+            print('update')
             out = run_cmd(command2) # update file
 
         if (out.returncode != 0):
@@ -80,8 +97,8 @@ def upload_vdi(command1, command2, destination):
 
 
 def main():
-    uuid_recv_drive_1 = 'A0AACF26AACEF7B4'
-    uuid_recv_drive_2 = 'A0AACF26AACEF7B4'
+    uuid_recv_drive_1 = '01D7B5F7EF7D6100'  # Wester Digistal 1Tb
+    uuid_recv_drive_2 = '01D7B5E18B1C3670'  # Hitahci 500Gb
     
     source = '/cygdrive/d/'
 
@@ -229,7 +246,11 @@ def main():
         destination
     ]
 
-    #upload(rsync_test_mode_wo_vdi, source, list_sync_dirs, cur_uuid, logs_dir)
-   
+    upload(rsync_test_mode_wo_vdi, source, list_sync_dirs, cur_uuid, logs_dir, True)
+    upload(rsync_wo_vdi, source, list_sync_dirs, cur_uuid, logs_dir, False)
+
+    upload_vdi(rsync_test_mode_crt_vdi, rsync_test_mode_upd_vdi, source, list_sync_dirs[len(list_sync_dirs) - 1], cur_uuid, destination, logs_dir, True)
+    upload_vdi(rsync_crt_vdi, rsync_upd_vdi, source, list_sync_dirs[len(list_sync_dirs) - 1], cur_uuid, destination, logs_dir, False)
+
 
 main()
