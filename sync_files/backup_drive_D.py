@@ -3,6 +3,7 @@ Changed in version 3.7:
 Added the capture_output parameter.
 """
 
+
 from genericpath import isfile
 import subprocess
 import sys
@@ -49,21 +50,25 @@ def get_mount_point(uuid):
 
 
 # insert into rsync command arguments of source and path log file
-def insert_arg_cmd(command, path_src, sync_dir, uuid_disk, logs_dir, test_mode):
-    command[len(command) - 2] = path_src + sync_dir
-
+def insert_arg_cmd(command, source, sync_dir, destination, uuid_disk, logs_dir, test_mode):
+    
+    if(source.endswith('.vdi')): # check if source variable contains string of full path to .vdi file 
+        command[len(command) - 2] = source 
+        command[len(command) - 1] = destination
+    else:                       # otherwise source contains sync folder
+        command[len(command) - 2] = source + sync_dir  
+    
     if (test_mode):
         command[len(command) - 3] = '--log-file=' + logs_dir + '/' + uuid_disk + '__TEST_MODE__' + sync_dir + '.txt'
     else:
         command[len(command) - 3] = '--log-file=' + logs_dir + '/' + uuid_disk + '__' + sync_dir + '.txt'
 
     
-
 #upload files without .vdi images
 def upload(command, path_src, list_sync_dirs, uuid_disk, logs_dir, test_mode):
     for i in range(len(list_sync_dirs)):
 
-        insert_arg_cmd(command, path_src, list_sync_dirs[i], uuid_disk, logs_dir, test_mode)
+        insert_arg_cmd(command, path_src, list_sync_dirs[i], None, uuid_disk, logs_dir, test_mode)
         code = run_cmd(command)
 
         if (code.returncode != 0):
@@ -77,18 +82,21 @@ def upload_vdi(command1, command2, path_src, sync_dir, uuid_disk, destination, l
     for i in list_vdi_img:
         clip_path_vdi_img = i[11:] # i='/cygdrive/d/VirtualBox_VMs/arch/arch.vdi, clip_path_vdi_img=/VirtualBox_VMs/arch/arch.vdi
 
+        print(i)
         print(clip_path_vdi_img)
         out = ''
-        print(destination + clip_path_vdi_img)
+        print(destination + clip_path_vdi_img) # /cygdrive/g/dell_inspiron_3576/VirtualBox_VMs/arch/arch.vdi
 
-        if (not os.path.isfile(destination + clip_path_vdi_img)):
-            insert_arg_cmd(command1, path_src, sync_dir, uuid_disk, logs_dir, test_mode)
-            #print(command1)
+        path_vdi_recv = destination + clip_path_vdi_img
+
+        if (not os.path.isfile(path_vdi_recv)):
+            insert_arg_cmd(command1, i, sync_dir, path_vdi_recv, uuid_disk, logs_dir, test_mode)
+            print(command1)
             print('create')
             out = run_cmd(command1) # create file
         else:
-            insert_arg_cmd(command2, path_src, sync_dir, uuid_disk, logs_dir, test_mode)
-            #print(command2)
+            insert_arg_cmd(command2, i, sync_dir, path_vdi_recv, uuid_disk, logs_dir, test_mode)
+            print(command2)
             print('update')
             out = run_cmd(command2) # update file
 
@@ -195,7 +203,7 @@ def main():
         '--copy-links',             # transform symlink into referent file/dir
         '',
         '',
-        destination
+        ''
     ]
 
     rsync_test_mode_upd_vdi = [
@@ -212,7 +220,7 @@ def main():
         '--copy-links',
         '',
         '',
-        destination
+        ''
     ]
 
     rsync_crt_vdi = [
@@ -227,7 +235,7 @@ def main():
         '--copy-links', 
         '',
         '',
-        destination
+        ''
     ]
 
     rsync_upd_vdi = [
@@ -243,7 +251,7 @@ def main():
         '--copy-links',
         '',
         '',
-        destination
+        ''
     ]
 
     upload(rsync_test_mode_wo_vdi, source, list_sync_dirs, cur_uuid, logs_dir, True)
