@@ -32,11 +32,8 @@ def get_src_drive(uuid):
 
 # check if one of disk-receiver mounted and get his path of mount point  
 def get_recv_drive():
-    #uuid_recv_drive_1 = '01D7B5F7EF7D6100'  # Wester Digistal 1Tb
-    #uuid_recv_drive_2 = '01D7B5E18B1C3670'  # Hitahci 500Gb
-
-    uuid_recv_drive_1 = 'CC6A7CA06A7C894A'  
-    uuid_recv_drive_2 = 'CC6A7CA06A7C894A1'  
+    uuid_recv_drive_1 = '01D7B5F7EF7D6100'  # Wester Digistal 1Tb
+    uuid_recv_drive_2 = '01D7B5E18B1C3670'  # Hitahci 500Gb
 
     curnt_uuid = ''
     recv = get_mount_point(uuid_recv_drive_1)
