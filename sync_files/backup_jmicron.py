@@ -56,8 +56,8 @@ def main():
         path_destination
     ]
 
-    list_sync_dirs = glob(src_drive + "/*/")
-
+    list_sync_dirs = glob(src_drive + '/*')
+    
     upl.upload_files(rsync_upl_test_mode, list_sync_dirs, uuid_recv_drive, logs_dir, True)
     upl.upload_files(rsync_upl, list_sync_dirs, uuid_recv_drive, logs_dir, False)
 
