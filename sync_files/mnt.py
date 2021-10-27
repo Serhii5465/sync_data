@@ -1,6 +1,6 @@
 from call_bash_func import get_cmd_output
 import sys
-
+import os
 
 # get unix-like mount point partition disk by his uuid
 def get_mount_point(uuid):
@@ -12,9 +12,9 @@ def get_mount_point(uuid):
     else:
         # output: CompletedProcess(args=['cygpath', '--windows', '/dev/sda2'], returncode=0, stdout='\\\\.\\D:\n', stderr='')
         win_mnt_point = get_cmd_output(['cygpath', '--windows', name_block_dev.stdout.strip('\n')])
-
+    
         # output CompletedProcess(args=['cygpath', '--unix', 'D:'], returncode=0, stdout='/cygdrive/d\n', stderr='')
-        unix_mnt_point = get_cmd_output(['cygpath', '--unix', win_mnt_point.stdout.strip('\n')[4:]])
+        unix_mnt_point = get_cmd_output(['cygpath', '--unix', win_mnt_point.stdout.strip('/\\.\/').strip('\n')])
 
         # example return: /cygdrive/d 
         return unix_mnt_point.stdout.strip('\n') 
