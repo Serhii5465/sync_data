@@ -5,7 +5,6 @@ import sys
 
 # insert into rsync command arguments of source and path log file
 def inst_log_arg(command, is_test_mode, path_logs_dir, uuid_drive, name_sync_dir):
-
     if (is_test_mode):
         command[len(command) - 3] = '--log-file=' + path_logs_dir + '/' + uuid_drive + '__TEST_MODE__' + name_sync_dir + '.txt'
     else:
