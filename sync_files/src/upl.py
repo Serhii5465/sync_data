@@ -46,19 +46,13 @@ def upload_vdi(command1, command2, full_pth_src_dir, root_pth_src_drive, full_pa
         #print(path_dest_vdi)
         
         if (not os.path.isfile(path_dest_vdi)):
-            print('create')
-
             command1[len(command1) - 2] = i
             command1[len(command1) - 1] = path_dest_vdi
-
             inst_log_arg(command1, is_test_mode, path_logs_dir, uuid_disk, name_dir_vdi)
             out = bash_proc.run_cmd(command1)
         else:
-            print('update')
-
             command2[len(command2) - 2] = i
             command2[len(command2) - 1] = path_dest_vdi
-
             inst_log_arg(command2, is_test_mode, path_logs_dir, uuid_disk, name_dir_vdi)
             out = bash_proc.run_cmd(command2)
 
