@@ -1,15 +1,9 @@
-import sys
-import os
-import subprocess
 from pathlib import Path
 from time import gmtime, strftime
-
-def get_cmd_output(command):
-    return subprocess.run(command, capture_output=True, text=True)
-
-
-def run_cmd(command):
-    return subprocess.run(command, stderr=sys.stderr, stdout=sys.stdout)
+import src.log as log
+import src.bash_proc as bash_proc
+import sys
+import os
 
 
 def check_files(*args):
@@ -20,10 +14,10 @@ def check_files(*args):
             
 
 def upload_to_gdrive(rclone_dir, sync_dir, logs_dir, date):
-    win_style_path_sync_dir = get_cmd_output(['cygpath', '--windows', sync_dir])
-    win_style_path_logs_dir = get_cmd_output(['cygpath', '--windows', logs_dir])
+    win_style_path_sync_dir = bash_proc.get_cmd_output(['cygpath', '--windows', sync_dir])
+    win_style_path_logs_dir = bash_proc.get_cmd_output(['cygpath', '--windows', logs_dir])
 
-    out = run_cmd([rclone_dir + '/rclone.exe', 
+    out = bash_proc.run_cmd([rclone_dir + '/rclone.exe', 
                         'sync', 
                         '--progress', 
                         '--verbose',
@@ -39,17 +33,11 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir, date):
 
 
 def main():
+    logs_dir = log.get_logs_dir('rclone')
 
-    home_dir = str(Path.home())
-
-    logs_dir = '/cygdrive/d/logs/rclone'
-
-    rclone_config = home_dir + '/.config/rclone/rclone.conf'
+    rclone_config = str(Path.home()) + '/.config/rclone/rclone.conf'
     rclone_path_dir = '/cygdrive/c/portable/rclone'
     sync_dir = '/cygdrive/d/documents'
-
-    # create logs directory
-    Path(logs_dir).mkdir(parents=True, exist_ok=True)
 
     time_now = strftime('%Y-%m-%d__%H-%M-%S', gmtime())
 
