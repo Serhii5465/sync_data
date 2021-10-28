@@ -52,7 +52,6 @@ def upload_vdi(command1, command2, full_pth_src_dir, root_pth_src_drive, full_pa
             command1[len(command1) - 1] = path_dest_vdi
 
             inst_log_arg(command1, is_test_mode, path_logs_dir, uuid_disk, name_dir_vdi)
-            print(command1)
             out = bash_proc.run_cmd(command1)
         else:
             print('update')
@@ -61,7 +60,6 @@ def upload_vdi(command1, command2, full_pth_src_dir, root_pth_src_drive, full_pa
             command2[len(command2) - 1] = path_dest_vdi
 
             inst_log_arg(command2, is_test_mode, path_logs_dir, uuid_disk, name_dir_vdi)
-            print(command2)
             out = bash_proc.run_cmd(command2)
 
         if (out.returncode != 0):
