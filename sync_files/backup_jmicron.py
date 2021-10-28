@@ -1,7 +1,7 @@
 from glob import glob
-import log
-import mnt
-import upl
+import src.log as log
+import src.mnt as mnt
+import src.upl as upl
 
 def main():
 
