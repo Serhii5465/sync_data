@@ -13,7 +13,6 @@ def inst_log_arg(command, is_test_mode, path_logs_dir, uuid_drive, name_sync_dir
 
 def upload_files(command, list_sync_dirs, uuid_disk, path_logs_dir, is_test_mode):
     for dir in list_sync_dirs:
-
         # set argument source of sync
         command[len(command) - 2] = dir
 
