@@ -3,7 +3,7 @@ import src.mnt as mnt
 import src.upl as upl
 
 def main():
-    uuid_src_drive = 'A0AACF26AACEF7B4'
+    uuid_src_drive = '180EB8FB0EB8D2CC'
     root_pth_src_drive = mnt.get_src_drive(uuid_src_drive) # /cygdrive/d
 
     root_pth_dest_drive, uuid_recv_drive = mnt.get_recv_drive() # /cygdrive/f, A1AACF26ERCEF7B4
