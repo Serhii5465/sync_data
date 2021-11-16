@@ -6,7 +6,7 @@ def main():
     uuid_src_drive = '180EB8FB0EB8D2CC'
     root_pth_src_drive = mnt.get_src_drive(uuid_src_drive) # /cygdrive/d
 
-    root_pth_dest_drive, uuid_recv_drive = mnt.get_recv_drive() # /cygdrive/f, A1AACF26ERCEF7B4
+    root_pth_dest_drive, name_model_recv_drive = mnt.get_recv_drive() # /cygdrive/f, Hitachi
     full_path_dest_dir = root_pth_dest_drive + '/dell_inspiron_3576'
 
     path_logs_dir = log.get_logs_dir('drive_D')
@@ -136,8 +136,8 @@ def main():
     # append every element array with variable disk-source
     list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in list_sync_dirs] 
 
-    upl.upload_files(rsync_test_mode_wo_vdi, list_full_path_sync_dirs, uuid_recv_drive, path_logs_dir, True)
-    upl.upload_files(rsync_wo_vdi, list_full_path_sync_dirs, uuid_recv_drive, path_logs_dir, False)
+    upl.upload_files(rsync_test_mode_wo_vdi, list_full_path_sync_dirs, name_model_recv_drive, path_logs_dir, True)
+    upl.upload_files(rsync_wo_vdi, list_full_path_sync_dirs, name_model_recv_drive, path_logs_dir, False)
 
     upl.upload_vdi(
         rsync_test_mode_crt_vdi,
@@ -145,7 +145,7 @@ def main():
         list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
         root_pth_src_drive,
         full_path_dest_dir,
-        uuid_recv_drive,
+        name_model_recv_drive,
         path_logs_dir,
         True
     )
@@ -156,7 +156,7 @@ def main():
         list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
         root_pth_src_drive,
         full_path_dest_dir,
-        uuid_recv_drive,
+        name_model_recv_drive,
         path_logs_dir,
         False
     )
