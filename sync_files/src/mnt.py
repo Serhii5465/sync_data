@@ -42,8 +42,8 @@ def get_src_drive(uuid):
 
 # check if one of disk-receiver mounted and get his path of mount point  
 def get_recv_drive():
-    uuid_recv_drive_1 = '1078010A7800EFF0'  # Wester Digistal 1Tb
-    uuid_recv_drive_2 = '01D7B5E18B1C3670'  # Hitahci 500Gb
+    uuid_recv_drive_1 = '1078010A7800EFF0'  # Wester Digital 1Tb
+    uuid_recv_drive_2 = '0280B4A880B4A397'  # Hitahci 500Gb
 
     curnt_uuid = ''
     recv = get_mount_point(uuid_recv_drive_1)
@@ -53,6 +53,6 @@ def get_recv_drive():
         if(recv is None):
             sys.exit('Receiver-disk is not mounted')
         else:
-            return recv, uuid_recv_drive_2
+            return recv, 'Hitachi'
     else:
-        return recv, uuid_recv_drive_1    
+        return recv, 'Wester Digital'    
