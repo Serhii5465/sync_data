@@ -18,15 +18,13 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir):
     win_style_path_sync_dir = bash_proc.get_cmd_output(['cygpath', '--windows', sync_dir])
     win_style_path_logs_dir = bash_proc.get_cmd_output(['cygpath', '--windows', logs_dir])
 
-    date = time.get_time_now()
-
     out = bash_proc.run_cmd([rclone_dir + '/rclone.exe', 
                         'sync', 
                         '--progress', 
                         '--verbose',
                         win_style_path_sync_dir.stdout.strip('\n'), 
                         'google-drive:',
-                        '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '\\' + date + '.txt'])
+                        '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '.log'])
     
     
     if (out.returncode != 0):
