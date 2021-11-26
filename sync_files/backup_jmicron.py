@@ -4,7 +4,7 @@ import src.mnt as mnt
 import src.upl as upl
 
 def main():
-    uuid_src_drive = '82E4A614E4A60B0D'
+    uuid_src_drive = '16DE3B14DE3AEC1D'
     src_drive = mnt.get_src_drive(uuid_src_drive)
 
     recv_drive, name_model_recv_drive = mnt.get_recv_drive()
