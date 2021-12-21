@@ -18,14 +18,15 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir):
     win_style_path_sync_dir = bash_proc.get_cmd_output(['cygpath', '--windows', sync_dir])
     win_style_path_logs_dir = bash_proc.get_cmd_output(['cygpath', '--windows', logs_dir])
 
+    date_now = time.get_time_now()
+
     out = bash_proc.run_cmd([rclone_dir + '/rclone.exe', 
                         'sync', 
                         '--progress', 
                         '--verbose',
                         win_style_path_sync_dir.stdout.strip('\n'), 
                         'google-drive:',
-                        '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '.log'])
-    
+                        '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date_now +'.log'])
     
     if (out.returncode != 0):
         sys.exit('Error\nCheck logs')
@@ -34,7 +35,7 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir):
 
 
 def main():
-    logs_dir = log.get_logs_dir('rclone')
+    logs_dir = log.get_logs_dir('rclone', False)
 
     rclone_config = str(Path.home()) + '/.config/rclone/rclone.conf'
     rclone_path_dir = '/cygdrive/c/portable/rclone'
