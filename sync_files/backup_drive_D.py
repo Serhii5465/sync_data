@@ -129,7 +129,7 @@ def main():
     list_sync_dirs = [
         'backups', 
         'documents', 
-        'install', 
+        'installers', 
         'raisnet',
         'VirtualBox_VMs']
 
