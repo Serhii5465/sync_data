@@ -1,7 +1,6 @@
-from glob import glob
-import src.log as log
-import src.mnt as mnt
-import src.upl as upl
+import glob
+from src import mnt, log, upl
+
 
 def main():
     uuid_src_drive = 'B880237780233B70'
@@ -56,9 +55,12 @@ def main():
     ]
 
     list_sync_dirs = glob(src_drive + '/*')
-    
-    upl.upload_files(rsync_upl_test_mode, list_sync_dirs, name_model_recv_drive, logs_dir, True)
-    upl.upload_files(rsync_upl, list_sync_dirs, name_model_recv_drive, logs_dir, False)
+
+    on_test_mode = True
+    off_test_mode = False
+
+    upl.upload_files(rsync_upl_test_mode, list_sync_dirs, name_model_recv_drive, logs_dir, on_test_mode)
+    upl.upload_files(rsync_upl, list_sync_dirs, name_model_recv_drive, logs_dir, off_test_mode)
 
 
 main()
