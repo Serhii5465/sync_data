@@ -2,21 +2,6 @@ import sys
 import argparse
 from src import mnt, log, upl
 
-def handler_cmd_arg(args, list_func):
-    """
-    Exec. script with different arguments.
-    If [args] = a, start synchronization all folders, that located on source-partition.
-    Otherwise, script starts synchronization all folders, w/o folder which contains VDI files
-    :param args: argument execution script
-    :param list_func: array of functions, which contains different arguments of execution Rsync
-    """
-    if args['a']:
-        for item in list_func:
-            item
-    elif args['novdi']:
-        for item in range(len(list_func)/2):
-            list_func[item]
-
 
 def prepare_sync_data():
     """
@@ -24,7 +9,6 @@ def prepare_sync_data():
     arrays with arguments execution for Rsync,
     checking if mounted partition-receiver,
     creating log file
-    :return: list functions with different arguments for execution Rsync
     """
     uuid_src_drive = '01D7DEEE65713660'
     root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)  # /cygdrive/d
@@ -164,57 +148,43 @@ def prepare_sync_data():
     on_test_mode = True
     off_test_mode = False
 
-    list_rsync_func = [
-        upl.upload_files(
-            rsync_test_mode_wo_vdi,
-            list_full_path_sync_dirs,
-            name_model_recv_drive,
-            path_logs_dir,
-            on_test_mode),
+    upl.upload_files(
+        rsync_test_mode_wo_vdi,
+        list_full_path_sync_dirs,
+        name_model_recv_drive,
+        path_logs_dir,
+        on_test_mode),
 
-        upl.upload_files(
-            rsync_wo_vdi,
-            list_full_path_sync_dirs,
-            name_model_recv_drive,
-            path_logs_dir,
-            off_test_mode),
+    upl.upload_files(
+        rsync_wo_vdi,
+        list_full_path_sync_dirs,
+        name_model_recv_drive,
+        path_logs_dir,
+        off_test_mode),
 
-        upl.upload_vdi(
-            rsync_test_mode_crt_vdi,
-            rsync_test_mode_upd_vdi,
-            list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
-            root_pth_src_drive,
-            full_path_dest_dir,
-            name_model_recv_drive,
-            path_logs_dir,
-            on_test_mode
-        ),
+    upl.upload_vdi(
+        rsync_test_mode_crt_vdi,
+        rsync_test_mode_upd_vdi,
+        list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
+        root_pth_src_drive,
+        full_path_dest_dir,
+        name_model_recv_drive,
+        path_logs_dir,
+        on_test_mode
+    ),
 
-        upl.upload_vdi(
-            rsync_crt_vdi,
-            rsync_upd_vdi,
-            list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
-            root_pth_src_drive,
-            full_path_dest_dir,
-            name_model_recv_drive,
-            path_logs_dir,
-            off_test_mode
-        )
-    ]
-
-    return list_rsync_func
+    upl.upload_vdi(
+        rsync_crt_vdi,
+        rsync_upd_vdi,
+        list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
+        root_pth_src_drive,
+        full_path_dest_dir,
+        name_model_recv_drive,
+        path_logs_dir,
+        off_test_mode)
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Backuping drive D to external hdd')
-    parser.add_argument("-a", action='store_true', help='Syncing all folders')
-    parser.add_argument("--novdi", action='store_true', help='Syncing folders w/o files with extensions .vdi')
-
-    args = vars(parser.parse_args())
-
-    if len(sys.argv) == 1:
-        sys.exit("Please, run script with argument. For more detail information use flag -h or --help")
-
-    handler_cmd_arg(args, prepare_sync_data())
+    prepare_sync_data()
 
 main()
