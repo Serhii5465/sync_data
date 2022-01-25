@@ -1,0 +1,2 @@
+Script backup_docs.py uses command-line utility Rclone for sync my documents with Gdrive.
+Scripts backup_drive_D.py and backup_jmicron synchronizes my files with external USB 3.0 HDD using UNIX utility Rsync.
