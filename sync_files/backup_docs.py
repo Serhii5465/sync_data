@@ -1,10 +1,8 @@
 import os
 import sys
 from pathlib import Path
+from src import date, log, bash_proc
 
-import src.bash_proc as bash_proc
-import src.log as log
-import src.time as time
 
 def check_files(*list_files):
     """
@@ -37,14 +35,14 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir):
     win_style_path_sync_dir = bash_proc.get_cmd_output(['cygpath', '--windows', sync_dir])
     win_style_path_logs_dir = bash_proc.get_cmd_output(['cygpath', '--windows', logs_dir])
 
-    date_now = time.get_time_now()
+    date_now = date.get_time_now()
 
     # Process syncing folder with Gdrive
     out = bash_proc.run_cmd([rclone_dir + '/rclone.exe', 
                         'sync', 
                         '--progress', 
                         '--verbose',
-                        win_style_path_sync_dir.stdout.strip('\n'), 
+                             win_style_path_sync_dir.stdout.strip('\n'),
                         'google-drive:',
                         '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date_now +'.log'])
     
