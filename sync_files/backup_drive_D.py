@@ -1,7 +1,4 @@
-import sys
-import argparse
 from src import mnt, log, upl
-
 
 def prepare_sync_data():
     """
