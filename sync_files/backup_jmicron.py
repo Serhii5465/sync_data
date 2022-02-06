@@ -1,9 +1,8 @@
 import glob
-from src import mnt, log, upl
-
+from src import mnt, log, upl, uuid
 
 def main():
-    uuid_src_drive = 'B880237780233B70'
+    uuid_src_drive = uuid.uuid_jmicron_drive
     src_drive = mnt.get_src_drive(uuid_src_drive)
 
     recv_drive, name_model_recv_drive = mnt.get_recv_drive()
@@ -54,13 +53,29 @@ def main():
         path_destination
     ]
 
-    list_sync_dirs = glob(src_drive + '/*')
+    list_full_path_sync_dirs = glob.glob(src_drive + '/*')
 
     on_test_mode = True
     off_test_mode = False
 
-    upl.upload_files(rsync_upl_test_mode, list_sync_dirs, name_model_recv_drive, logs_dir, on_test_mode)
-    upl.upload_files(rsync_upl, list_sync_dirs, name_model_recv_drive, logs_dir, off_test_mode)
+    test_mode_rsync_upl = {
+        'command' : rsync_upl_test_mode,
+        'list_full_path_sync_dirs' : list_full_path_sync_dirs,
+        'name_model_recv_drive': name_model_recv_drive,
+        'path_logs_dir': logs_dir,
+        'is_dry_run': on_test_mode
+    }
+
+    base_mode_rsync_upl = {
+        'command': rsync_upl,
+        'list_full_path_sync_dirs': list_full_path_sync_dirs,
+        'name_model_recv_drive': name_model_recv_drive,
+        'path_logs_dir': logs_dir,
+        'is_dry_run': off_test_mode
+    }
+
+    upl.upload_files(test_mode_rsync_upl)
+    upl.upload_files(base_mode_rsync_upl)
 
 
 main()

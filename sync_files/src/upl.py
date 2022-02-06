@@ -3,7 +3,6 @@ import os
 import sys
 from src import bash_proc
 
-
 def insert_log_arg(command, is_test_mode, path_logs_dir, name_model_recv_drive, name_sync_dir):
     """
     Inserting in array of arguments path to folder of the log file.
@@ -23,18 +22,25 @@ def insert_log_arg(command, is_test_mode, path_logs_dir, name_model_recv_drive, 
         command[len(command) - 3] = '--log-file=' + path_logs_dir + '/' + name_model_recv_drive + '__' + name_sync_dir + '.log'
 
 
-def upload_files(command, list_sync_dirs, name_model_recv_drive, path_logs_dir, is_test_mode):
+def upload_files(args):
     """
-    Synchronizes files between local host and external hard drive by using UNIX-utility rsync.
-    In the for loop, the directories from the [list_sync_dirs] variable are substituted.
+    Synchronizes files between local storage and external drive by using Rsync.
     If there is an error of synchronization, file access rights or something similar,
-    the transfer is terminated.
-    :param command: list which contains all arguments execution of the Rsync utility
-    :param list_sync_dirs: array of synchronized directories
-    :param name_model_recv_drive: name model of HDD-receiver
-    :param path_logs_dir: full path to log file
-    :param is_test_mode: indicates, if Rsync runs in dry-run mode
+    the transfer will be terminated.
+    :param args: Contains following fields:
+    command - list of different argument's execution for Rsync;
+    list_full_path_sync_dirs - full path to specific sync. folder (Example: /cygdrive/d/installers);
+    name_model_recv_drive - model HDD-receiver;
+    path_logs_dir - logs' directory;
+    is_dry_run - is Rsync running in dry-run mode.
     """
+
+    command = args.get('command')
+    list_sync_dirs = args.get('list_full_path_sync_dirs')
+    name_model_recv_drive = args.get('name_model_recv_drive')
+    path_logs_dir = args.get('path_logs_dir')
+    is_test_mode = args.get('is_dry_run')
+
     for dir in list_sync_dirs:
         # Setting argument of source sync. folder
         command[len(command) - 2] = dir
@@ -55,23 +61,33 @@ def upload_files(command, list_sync_dirs, name_model_recv_drive, path_logs_dir, 
            sys.exit('Error\nCheck logs')
 
 
-def upload_vdi(command1, command2, full_pth_src_dir, root_pth_src_drive, full_path_dest_dir, name_model_recv_drive, path_logs_dir, is_test_mode):
+def upload_vdi(args):
     """
     Uploading files of VirtualBox to external HDD. if file doesn't exist on
     receiver, Rsync will be creates it. Otherwise, Rsync will be updates it.
-    For creating big parse file be like VDI, Rsync in first execution will be started with
+    For creating big parse file be like VDI, Rsync in first execution will be starts with
     argument --sparse.
     For updates existing VDI, Rsync will be works with agruments --no-whole-file and --inplace.
     For more detail information: https://linux.die.net/man/1/rsync
-    :param command1: list with parameters execution for command Rsync for creating files with extensions .vdi
-    :param command2: list with parameters execution for command Rsync for updating existing files with extensions .vdi
-    :param full_pth_src_dir: full path to the folder which contains files with .vdi extensions
-    :param root_pth_src_drive: root path of sync. source-partition (Example: /cygdrive/d/ in Unix, D: in Windows)
-    :param full_path_dest_dir: full path to the sync. folder on partition-receiver
-    :param name_model_recv_drive: name model of HDD-receiver
-    :param path_logs_dir: full path to log file
-    :param is_test_mode: indicates mode of execution Rsync
+    :param args: Contains following fields:
+    command1 - list of different argument's execution  Rsync for creating VDI files;
+    command2 - list of different argument's execution  Rsync for updating VDI files;
+    full_path_vdi_dir - path to dir with VDI files (Example: /cygdrive/d/VirtualBox_VMs);
+    root_pth_src_drive - drive partition letter in UNIX-format (Example: /cygdrive/d/);
+    full_path_dest_dir - full path to folder-destination;
+    name_model_recv_drive - model HDD-receiver;
+    path_logs_dir - logs' directory;
+    is_dry_run - is Rsync running in dry-run mode.
     """
+
+    command1 = args.get('command1')
+    command2 = args.get('command2')
+    full_pth_src_dir = args.get('full_path_vdi_dir')
+    root_pth_src_drive = args.get('root_pth_src_drive')
+    full_path_dest_dir = args.get('full_path_dest_dir')
+    name_model_recv_drive = args.get('name_model_recv_drive')
+    path_logs_dir = args.get('path_logs_dir')
+    is_test_mode = args.get('is_dry_run')
 
     # Recursive search .vdi files
     list_vdi_img = glob.glob(full_pth_src_dir + '/**/*.vdi', recursive=True)
@@ -90,14 +106,12 @@ def upload_vdi(command1, command2, full_pth_src_dir, root_pth_src_drive, full_pa
         i='/cygdrive/d/VirtualBox_VMs/arch/arch.vdi, trim_path=/arch/arch.vdi
         """
         trim_path = i.split(full_pth_src_dir)[1]
-        #print(trim_path)
 
         """
         Concating all variable to variable, which contains path to the VDI file
         Result: /cygdrive/g/dell_inspiron_3576/VirtualBox_VMs/arch/arch.vdi
         """
         path_dest_vdi = full_path_dest_dir + '/' + name_dir_vdi + trim_path
-        #print(path_dest_vdi)
 
         # Creating VDI file
         if not os.path.isfile(path_dest_vdi):

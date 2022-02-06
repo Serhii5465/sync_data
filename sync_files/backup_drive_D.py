@@ -1,20 +1,33 @@
-from src import mnt, log, upl
+import argparse
+from src import mnt, log, upl, uuid
 
-def prepare_sync_data():
+def prepare_sync_data(cmd_args):
     """
     Prepares all data for start synchronization:
-    arrays with arguments execution for Rsync,
-    checking if mounted partition-receiver,
-    creating log file
+    arrays with argument's execution for Rsync,
+    checks if partition-receiver will be mount,
+    creates logs' folder,
     """
-    uuid_src_drive = '01D7DEEE65713660'
-    root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)  # /cygdrive/d
 
-    root_pth_dest_drive, name_model_recv_drive = mnt.get_recv_drive()  # /cygdrive/f, Hitachi
+# Section about: mount point,path to logs' dir, path to sync. dir
+    uuid_src_drive = uuid.uuid_dell_3576_drive
+
+    # Output: '/cygdrive/d'
+    root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)
+
+    # Output: root_pth_dest_drive: '/cygdrive/f', name_model_recv_drive: 'Hitachi'
+    root_pth_dest_drive, name_model_recv_drive = mnt.get_recv_drive()
     full_path_dest_dir = root_pth_dest_drive + '/dell_inspiron_3576'
 
+    # Output: '/cygdrive/d/logs/drive_D'
     path_logs_dir = log.get_logs_dir('drive_D')
 
+# End of section
+
+
+# Section of information about different parameters of the execution Rsync
+
+    # Dry-run mode exec. w/o creating .vdi files
     rsync_test_mode_wo_vdi = [
         'rsync',
         '--recursive',  # copy directories recursively
@@ -41,6 +54,7 @@ def prepare_sync_data():
         full_path_dest_dir
     ]
 
+    # Basic mode exec. w/o creating .vdi files
     rsync_wo_vdi = [
         'rsync',
         '--recursive',
@@ -66,6 +80,7 @@ def prepare_sync_data():
         full_path_dest_dir
     ]
 
+    # Dry-run mode exec. creating .vdi files
     rsync_test_mode_crt_vdi = [
         'rsync',
         '--recursive', '--links', '--perms', '--times', '--group', '--owner', '--devices', '--specials',
@@ -83,6 +98,7 @@ def prepare_sync_data():
         ''
     ]
 
+    # Dry-run mode exec. updating .vdi files
     rsync_test_mode_upd_vdi = [
         'rsync',
         '--recursive', '--links', '--perms', '--times', '--group', '--owner', '--devices', '--specials',
@@ -101,6 +117,7 @@ def prepare_sync_data():
         ''
     ]
 
+    # Basic mode exec. creating .vdi files
     rsync_crt_vdi = [
         'rsync',
         '--recursive', '--links', '--perms', '--times', '--group', '--owner', '--devices', '--specials',
@@ -116,6 +133,7 @@ def prepare_sync_data():
         ''
     ]
 
+    # Basic mode exec. updating .vdi files
     rsync_upd_vdi = [
         'rsync',
         '--recursive', '--links', '--perms', '--times', '--group', '--owner', '--devices', '--specials',
@@ -132,6 +150,9 @@ def prepare_sync_data():
         ''
     ]
 
+    on_test_mode = True
+    off_test_mode = False
+
     list_sync_dirs = [
         'backups',
         'documents',
@@ -139,49 +160,74 @@ def prepare_sync_data():
         'raisnet',
         'VirtualBox_VMs']
 
-    # Append every element array with variable disk-source
+    """
+    Appends every array's element with variable [root_pth_src_drive]
+    Input: [backups, installers]
+    Output: [/cygdrive/d/backups, /cygdrive/d/installers]
+    """
     list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in list_sync_dirs]
 
-    on_test_mode = True
-    off_test_mode = False
+    test_mode_rsync_upl_wo_vdi = {
+        'command' : rsync_test_mode_wo_vdi,
+        'list_full_path_sync_dirs' : list_full_path_sync_dirs,
+        'name_model_recv_drive' : name_model_recv_drive,
+        'path_logs_dir' : path_logs_dir,
+        'is_dry_run' : on_test_mode
+    }
 
-    upl.upload_files(
-        rsync_test_mode_wo_vdi,
-        list_full_path_sync_dirs,
-        name_model_recv_drive,
-        path_logs_dir,
-        on_test_mode),
+    base_mode_rsync_upl_wo_vdi = {
+        'command' : rsync_wo_vdi,
+        'list_full_path_sync_dirs': list_full_path_sync_dirs,
+        'name_model_recv_drive': name_model_recv_drive,
+        'path_logs_dir': path_logs_dir,
+        'is_dry_run': off_test_mode
+    }
 
-    upl.upload_files(
-        rsync_wo_vdi,
-        list_full_path_sync_dirs,
-        name_model_recv_drive,
-        path_logs_dir,
-        off_test_mode),
+    test_mode_rsync_upl_vdi = {
+        'command1' : rsync_test_mode_crt_vdi,
+        'command2' : rsync_test_mode_upd_vdi,
+        'full_path_vdi_dir' : list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
+        'root_pth_src_drive' : root_pth_src_drive,
+        'full_path_dest_dir' : full_path_dest_dir,
+        'name_model_recv_drive': name_model_recv_drive,
+        'path_logs_dir': path_logs_dir,
+        'is_dry_run': on_test_mode
+    }
 
-    upl.upload_vdi(
-        rsync_test_mode_crt_vdi,
-        rsync_test_mode_upd_vdi,
-        list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
-        root_pth_src_drive,
-        full_path_dest_dir,
-        name_model_recv_drive,
-        path_logs_dir,
-        on_test_mode
-    ),
+    base_mode_rsync_upl_vdi = {
+        'command1' : rsync_crt_vdi,
+        'command2' : rsync_upd_vdi,
+        'full_path_vdi_dir' : list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
+        'root_pth_src_drive' : root_pth_src_drive,
+        'full_path_dest_dir' : full_path_dest_dir,
+        'name_model_recv_drive': name_model_recv_drive,
+        'path_logs_dir': path_logs_dir,
+        'is_dry_run': off_test_mode
+    }
 
-    upl.upload_vdi(
-        rsync_crt_vdi,
-        rsync_upd_vdi,
-        list_full_path_sync_dirs[len(list_full_path_sync_dirs) - 1],
-        root_pth_src_drive,
-        full_path_dest_dir,
-        name_model_recv_drive,
-        path_logs_dir,
-        off_test_mode)
+    list_param_func = [ test_mode_rsync_upl_wo_vdi, base_mode_rsync_upl_wo_vdi, test_mode_rsync_upl_vdi, base_mode_rsync_upl_vdi ]
+
+ # End of section
+
+    if cmd_args['all']:
+        for i in range(len(list_param_func)):
+            if i < 2:
+                upl.upload_files(list_param_func[i])
+            else:
+                upl.upload_vdi(list_param_func[i])
+
+    if cmd_args['no_vdi']:
+        list_full_path_sync_dirs.pop()
+        for i in range(len(list_param_func) - 2):
+            upl.upload_files(list_param_func[i])
 
 
 def main():
-    prepare_sync_data()
+    parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
+    parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
+    parser.add_argument('--no-vdi', action='store_true', help='Copies all files, ignoring virtual disk images (.vdi) used by VirtualBox')
+
+    args = vars(parser.parse_args())
+    prepare_sync_data(args)
 
 main()
