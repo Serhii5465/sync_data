@@ -1,15 +1,15 @@
 import sys
-from src import bash_proc
+from src import bash_proc, uuid
 
-def get_mount_point(uuid):
+def get_mount_point(uuid_drive):
     """
-    Converts UUID partition to UNIX format path mount point.
+    Converts UUID partition to UNIX-format path's mount point.
     If partition not mounted, script will be stops his work.
-    :param uuid: universally unique identifier partition HDD
+    :param uuid_drive: universally unique identifier partition of HDD
     :return: Unix-like format path to the mount point of specific partition
     """
 
-    name_block_dev = bash_proc.get_cmd_output(['blkid', '--uuid', uuid]) #stdout example: /dev/sda1\n
+    name_block_dev = bash_proc.get_cmd_output(['blkid', '--uuid', uuid_drive]) #stdout example: /dev/sda1\n
 
     """
     Checking if partition is mounted
@@ -42,14 +42,14 @@ def get_mount_point(uuid):
 
 
 
-def get_src_drive(uuid):
+def get_src_drive(uuid_drive):
     """
     Checks if source-HDD mounted
-    :param uuid: universally unique identifier of the source-partition drive
+    :param uuid_drive: universally unique identifier of the source-partition drive
     :return: if false, script terminates.
     Otherwise, return full path to mount point of source-partition drive
     """
-    source = get_mount_point(uuid)
+    source = get_mount_point(uuid_drive)
     if source is None:
         sys.exit('Source-disk is not mounted')
     else:
@@ -58,15 +58,15 @@ def get_src_drive(uuid):
 
 def get_recv_drive():
     """
-    Function checks if mounted one of HDD-receiver and returns
+    Function checks if mounted one of HDD-receivers and returns
     path of mount point of the partition-receiver and the name of model disk.
-    Otherwise, if no one of HDD-receiver not mounted,
-    script will be finished his work.
+    Otherwise, if no one of HDD-receivers not mounted,
+    script will be finishes his work.
     :return: 1: path to the mount point; 2: name of model HDD
     """
 
-    uuid_recv_drive_1 = 'F60AE2DA0AE296C1'  # Wester Digital 1Tb
-    uuid_recv_drive_2 = '34FE4AFCFE4AB5C0'  # Hitahci 500Gb
+    uuid_recv_drive_1 = uuid.uuid_wd_drive
+    uuid_recv_drive_2 = uuid.uuid_hitachi_drive
 
     recv = get_mount_point(uuid_recv_drive_1)
 
