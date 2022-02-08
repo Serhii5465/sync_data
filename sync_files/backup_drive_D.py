@@ -225,7 +225,7 @@ def prepare_sync_data(cmd_args):
 def main():
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
     parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
-    parser.add_argument('--no-vdi', action='store_true', help='Copies all files, ignoring virtual disk images (.vdi) used by VirtualBox')
+    parser.add_argument('-n', '--no-vdi', action='store_true', help='Copies all files, ignoring virtual disk images (.vdi) used by VirtualBox')
 
     args = vars(parser.parse_args())
     prepare_sync_data(args)
