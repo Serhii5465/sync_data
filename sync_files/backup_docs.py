@@ -42,7 +42,7 @@ def upload_to_gdrive(rclone_dir, sync_dir, logs_dir):
                         'sync', 
                         '--progress', 
                         '--verbose',
-                             win_style_path_sync_dir.stdout.strip('\n'),
+                        win_style_path_sync_dir.stdout.strip('\n'),
                         'google-drive:',
                         '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date_now +'.log'])
     
