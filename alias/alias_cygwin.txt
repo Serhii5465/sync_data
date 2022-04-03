@@ -1,11 +1,13 @@
 alias relb='source ~/.bashrc'
 alias clc='clear'
+alias cls='clear'
 alias proj='cd /cygdrive/d/projects/'
+alias cddown='cd /cygdrive/d/downloads'
 alias ssh='~/scripts/ssh-ident'
-#alias backup_drive_D='bash ~/scripts/backup_drive_D.sh'
-alias backup_jmicron='bash ~/scripts/backup_jmicron.sh'
-alias backup_docs='bash ~/scripts/sync_docs_dir.sh'
 
-alias backup_drive_D='python ~/scripts/backup_drive_D.py'
+alias backup_drive_D='python ~/scripts/sync_files/backup_drive_D.py'
+alias backup_docs_gdrive='python ~/scripts/sync_files/backup_docs.py'
+alias backup_jmicron='python ~/scripts/sync_files/backup_jmicron.py'
+alias sync_music='python ~/scripts/sync_files/sync_music.py'
 
-alias backup_portable_app_disk_C='rsync -a --human-readable --stats --out-format="%t %f %''b" --progress --del --verbose /cygdrive/c/portable/ /cygdrive/d/backups/others/portable_app_drive_C/'
+alias backup_drive_C='rsync -ahPv --stats --out-format="%t %f %''b" --del /cygdrive/c/portable/ /cygdrive/d/backups/others/portable_app_drive_C/;rsync -ahPv --stats --out-format="%t %f %''b" --del /cygdrive/c/portable/cygwin64/home /cygdrive/c/portable/cygwin64/etc/fstab /cygdrive/d/backups/others/configs/cygwin_configs/;rsync -ahPv --stats --out-format="%t %f %''b" --del /cygdrive/c/services/ /cygdrive/d/backups/others/C#_services/'
