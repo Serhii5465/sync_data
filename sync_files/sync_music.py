@@ -33,7 +33,7 @@ def upload(src, dest, root_dest):
 
 
 def main():
-    unix_src_dir = '/cygdrive/d/raisnet/music'
+    unix_src_dir = '/cygdrive/d/raisnet/Music'
     win_src_dir = bash_proc.get_cmd_output(['cygpath.exe', '--windows', unix_src_dir]).stdout.strip('\n')
     
     dest_dir = '/storage/self/primary/Music'
