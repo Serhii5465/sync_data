@@ -45,7 +45,7 @@ def prepare_sync_data(cmd_args):
         '--del',  # receiver deletes during xfer, not before
         '--verbose',  # increase verbosity
         '--out-format="%t %f %''b"',
-        '--exclude=games/',
+        '--exclude=Games/',
         '--exclude=Snapshots/',
         '--exclude=Logs/',
         '''--exclude=*.vdi''',
@@ -71,7 +71,7 @@ def prepare_sync_data(cmd_args):
         '--del',
         '--verbose',
         '--out-format="%t %f %''b"',
-        '--exclude=games/',
+        '--exclude=Games/',
         '--exclude=Snapshots/',
         '--exclude=Logs/',
         '''--exclude=*.vdi''',
@@ -157,7 +157,7 @@ def prepare_sync_data(cmd_args):
         'backups',
         'documents',
         'installers',
-        'raisnet',
+        'media',
         'VirtualBox_VMs']
 
     """
