@@ -8,4 +8,4 @@ uuid_hitachi_drive = 'BE6233E062339C59'
 uuid_dell_3576_drive = '01D7DEEE65713660'
 
 # 2.5″ Western Digital 320Gb
-uuid_jmicron_drive = '8216378816377BEB'
+uuid_jmicron_drive = '42723D35723D2ED3'
