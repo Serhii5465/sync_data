@@ -1,5 +1,5 @@
 # Wester Digital 1Tb
-uuid_wd_drive = '0016381016380964'
+uuid_wd_drive = '004AB8894AB87D4A'
 
 # Hitahci 500Gb
 uuid_hitachi_drive = 'BE102871102832B7'
