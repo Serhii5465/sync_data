@@ -6,7 +6,7 @@ def get_logs_dir(name_dir,add_subfolder = True):
     Function creates all hierarchy parent and child's directories
     and return their all path.
     :param name_dir: name parent log directory
-    :param add_subfolder: creates specific subdir for log file.Otherwise nothing happens.
+    :param add_subfolder: creates specific subdir for log file.Otherwise, nothing happens.
     :return: full path to log's file
     """
     date_now = date.get_time_now()
