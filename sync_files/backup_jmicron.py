@@ -1,9 +1,9 @@
 import glob
-from src import mnt, log, upl, uuid
+from src import mnt, log, upl, hdd_info
 
 def main():
-    uuid_src_drive = uuid.uuid_jmicron_drive
-    src_drive = mnt.get_src_drive(uuid_src_drive)
+    #uuid_src_drive = hdd_info.jmicron_drive
+    src_drive = mnt.get_src_drive(hdd_info.jmicron_drive.get('uuid'))
 
     recv_drive, name_model_recv_drive = mnt.get_recv_drive()
     path_destination = recv_drive + '/jmicron'
@@ -27,6 +27,7 @@ def main():
         '--del',                #receiver deletes during xfer, not before
         '--verbose',            #increase verbosity
         '--out-format="%t %f %''b"',
+        '--exclude=dell_inspiron_3576/',
         '',
         '', 
         path_destination
@@ -48,6 +49,7 @@ def main():
         '--del',                
         '--verbose',            
         '--out-format="%t %f %''b"',
+        '--exclude=dell_inspiron_3576/',
         '',
         '', 
         path_destination

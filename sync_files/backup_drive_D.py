@@ -1,5 +1,5 @@
 import argparse
-from src import mnt, log, upl, uuid
+from src import mnt, log, upl, hdd_info
 
 def prepare_sync_data(cmd_args):
     """
@@ -10,7 +10,7 @@ def prepare_sync_data(cmd_args):
     """
 
 # Section about: mount point,path to logs' dir, path to sync. dir
-    uuid_src_drive = uuid.uuid_dell_3576_drive
+    uuid_src_drive = hdd_info.dell_3576_drive.get('uuid')
 
     # Output: '/cygdrive/d'
     root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)
