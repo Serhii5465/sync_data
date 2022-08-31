@@ -1,5 +1,5 @@
-import sys
-from src import bash_proc, uuid
+import sys, uu, re
+from src import bash_proc, hdd_info
 
 def get_mount_point(uuid_drive):
     """
@@ -64,17 +64,17 @@ def get_recv_drive():
     script will be finishes his work.
     :return: 1: path to the mount point; 2: name of model HDD
     """
+    
+    uuids = [
+        hdd_info.wd_drive,
+        hdd_info.hitachi_drive,
+        hdd_info.jmicron_drive
+    ]
 
-    uuid_recv_drive_1 = uuid.uuid_wd_drive
-    uuid_recv_drive_2 = uuid.uuid_hitachi_drive
-
-    recv = get_mount_point(uuid_recv_drive_1)
-
+    for i in uuids:
+        recv = get_mount_point(i.get('uuid'))
+        if recv is not None:
+            return recv, i.get('name')            
+        
     if recv is None:
-        recv = get_mount_point(uuid_recv_drive_2)
-        if recv is None:
-            sys.exit('Receiver-disk is not mounted')
-        else:
-            return recv, 'Hitachi'
-    else:
-        return recv, 'Wester Digital'
+        sys.exit('Receiver-disk is not mounted')
