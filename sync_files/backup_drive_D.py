@@ -1,4 +1,5 @@
 import argparse
+import sys
 from src import mnt, log, upl, hdd_info
 
 def prepare_sync_data(cmd_args):
@@ -6,7 +7,7 @@ def prepare_sync_data(cmd_args):
     Prepares all data for start synchronization:
     arrays with argument's execution for Rsync,
     checks if partition-receiver will be mount,
-    creates logs' folder,
+    creates logs' folder
     """
 
 # Section about: mount point,path to logs' dir, path to sync. dir
@@ -15,8 +16,11 @@ def prepare_sync_data(cmd_args):
     # Output: '/cygdrive/d'
     root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)
 
-    # Output: root_pth_dest_drive: '/cygdrive/f', name_model_recv_drive: 'Hitachi'
-    root_pth_dest_drive, name_model_recv_drive = mnt.get_recv_drive()
+    # Output: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' } 
+    root_pth_dest_drive, disk_data = mnt.get_recv_drive()
+    name_model_recv_drive = disk_data.get('name')
+    uuid_recv_drive = disk_data.get('uuid')
+
     full_path_dest_dir = root_pth_dest_drive + '/dell_inspiron_3576'
 
     # Output: '/cygdrive/d/logs/drive_D'
@@ -209,7 +213,12 @@ def prepare_sync_data(cmd_args):
 
  # End of section
 
+    uuid_hdd_wo_vdi = hdd_info.jmicron_drive.get('uuid')
+
     if cmd_args['all']:
+        if uuid_recv_drive == uuid_hdd_wo_vdi:
+            sys.exit('For this drive, the script must be called with the \'-n\' (\'-no_vdi\') parameter')
+
         for i in range(len(list_param_func)):
             if i < 2:
                 upl.upload_files(list_param_func[i])
@@ -217,7 +226,7 @@ def prepare_sync_data(cmd_args):
                 upl.upload_vdi(list_param_func[i])
 
     if cmd_args['no_vdi']:
-        list_full_path_sync_dirs.pop()
+        list_full_path_sync_dirs.pop() # Removing folder with Virtualbox images
         for i in range(len(list_param_func) - 2):
             upl.upload_files(list_param_func[i])
 

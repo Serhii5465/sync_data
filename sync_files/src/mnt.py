@@ -59,10 +59,10 @@ def get_src_drive(uuid_drive):
 def get_recv_drive():
     """
     Function checks if mounted one of HDD-receivers and returns
-    path of mount point of the partition-receiver and the name of model disk.
+    path of mount point of the partition-receiver and info about HDD (name and UUID).
     Otherwise, if no one of HDD-receivers not mounted,
-    script will be finishes his work.
-    :return: 1: path to the mount point; 2: name of model HDD
+    script will be finishes.
+    :return: 1: path to the mount point; 2: information about disk
     """
     
     uuids = [
@@ -74,7 +74,7 @@ def get_recv_drive():
     for i in uuids:
         recv = get_mount_point(i.get('uuid'))
         if recv is not None:
-            return recv, i.get('name')            
+            return recv, i        
         
     if recv is None:
         sys.exit('Receiver-disk is not mounted')

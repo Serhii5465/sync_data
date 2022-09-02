@@ -5,7 +5,8 @@ def main():
     #uuid_src_drive = hdd_info.jmicron_drive
     src_drive = mnt.get_src_drive(hdd_info.jmicron_drive.get('uuid'))
 
-    recv_drive, name_model_recv_drive = mnt.get_recv_drive()
+    recv_drive, disk_data = mnt.get_recv_drive()
+    name_model_recv_drive = disk_data.get('name')
     path_destination = recv_drive + '/jmicron'
 
     logs_dir = log.get_logs_dir('jmicron')
