@@ -17,6 +17,6 @@ dell_3576_drive = {
 
 # 2.5″ Western Digital 320Gb (JMicron)
 jmicron_drive = {
-    'uuid' : '01D88D3C9AF9DC90',
+    'uuid' : '01D8C1D0373750C0',
     'name' : 'Western Digital (JMicron)'
 }
