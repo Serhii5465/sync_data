@@ -1,12 +1,12 @@
 # Wester Digital 1Tb (Maiwo External Enclosure)
 wd_drive = {
-    'uuid' : '004AB8894AB87D4A',
+    'uuid' : '088C11A28C118AF8',
     'name' : 'Wester Digital (Maiwo)'
 }
 
 # Hitachi 500Gb (Maiwo External Enclosure)
 hitachi_drive = {
-    'uuid' : 'BE102871102832B7',
+    'uuid' : '74FAE577FAE53650',
     'name' : 'Hitachi (Maiwo)'
 }
 
