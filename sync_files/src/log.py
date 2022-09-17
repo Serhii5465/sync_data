@@ -1,21 +1,25 @@
 from pathlib import Path
-from src import date
+from src.date import Date
 
-def get_logs_dir(name_dir,add_subfolder = True):
-    """
-    Function creates all hierarchy parent and child's directories
-    and return their all path.
-    :param name_dir: name parent log directory
-    :param add_subfolder: creates specific subdir for log file.Otherwise, nothing happens.
-    :return: full path to log's file
-    """
-    date_now = date.get_time_now()
 
-    if add_subfolder:
-        full_path_logs_dir = '/cygdrive/d/logs/' + name_dir + '/' + date_now
-    else:
-        full_path_logs_dir = '/cygdrive/d/logs/' + name_dir
+class Log:
 
-    Path(full_path_logs_dir).mkdir(parents=True, exist_ok=True)
+    @staticmethod
+    def get_logs_dir(name_dir, add_subfolder=True):
+        """
+        Function creates all hierarchy parent and child's directories
+        and return their all path.
+        :param name_dir: name parent log directory
+        :param add_subfolder: creates specific subdir for log file.Otherwise, nothing happens.
+        :return: full path to log's file
+        """
+        date_now = Date.get_time_now()
 
-    return full_path_logs_dir
+        if add_subfolder:
+            full_path_logs_dir = '/cygdrive/d/logs/' + name_dir + '/' + date_now
+        else:
+            full_path_logs_dir = '/cygdrive/d/logs/' + name_dir
+
+        Path(full_path_logs_dir).mkdir(parents=True, exist_ok=True)
+
+        return full_path_logs_dir
