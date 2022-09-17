@@ -3,7 +3,7 @@ import sys
 import logging
 from src.data.hdd_info import HddInfo
 from src.bash_process import BashProcess
-from src.data.adbpaths import AdbPaths
+from src.data.adb_paths import AdbPaths
 from src.date import Date
 from src.log import Log
 
