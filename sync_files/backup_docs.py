@@ -1,6 +1,6 @@
 import os
 import sys
-from src.data.rclone_conf import RcloneConf
+from pathlib import Path
 from src.bash_process import BashProcess
 from src.date import Date
 from src.log import Log
@@ -8,13 +8,12 @@ from src.log import Log
 class BackupDocuments:
 
     def __init__(self) -> None:
-        self.__rclone = RcloneConf()
-        self.check_files(self.__rclone.conf, self.__rclone.sync_dir, self.__rclone.prog_dir)
-        self.__logs_dir = Log.get_logs_dir('rclone', add_subfolder=False)
+        self.__rclone_conf = str(Path.home()) + '/.config/rclone/rclone.conf'
+        self.__rclone_prog_dir = '/cygdrive/c/portable/rclone'
+        self.__sync_dir = '/cygdrive/d/documents'
 
-    @property
-    def rclone(self):
-        return self.__rclone
+        self.check_files(self.__rclone_prog_dir, self.__rclone_conf, self.__sync_dir)
+        self.__logs_dir = Log.get_logs_dir('rclone', add_subfolder=False)
 
     @property
     def logs_dir(self):
@@ -47,13 +46,13 @@ class BackupDocuments:
         Converting Unix-like path to Windows form by using Cygpath.exe utility.
         Convertion runs in separate process.
         """
-        win_style_path_sync_dir = BashProcess.get_cmd_output(['cygpath', '--windows', self.__rclone.sync_dir])
+        win_style_path_sync_dir = BashProcess.get_cmd_output(['cygpath', '--windows', self.__sync_dir])
         win_style_path_logs_dir = BashProcess.get_cmd_output(['cygpath', '--windows', self.logs_dir])
 
         date_now = Date.get_time_now()
 
         # Process syncing folder with Gdrive
-        out = BashProcess.run_cmd([self.__rclone.prog_dir + '/rclone.exe',
+        out = BashProcess.run_cmd([self.__rclone_prog_dir + '/rclone.exe',
                                  'sync',
                                  '--progress',
                                  '--verbose',
