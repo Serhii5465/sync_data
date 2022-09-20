@@ -3,7 +3,6 @@ import sys
 import logging
 from src.data.hdd_info import HddInfo
 from src.bash_process import BashProcess
-from src.data.adb_paths import AdbPaths
 from src.date import Date
 from src.log import Log
 
@@ -13,9 +12,35 @@ class SyncMusic:
     def __init__(self):
         self.__bash_proc = BashProcess()
         self.get_stat_dev()
+
+        self.__sync_dir = 'Music/'
+        self.__root_unix_src_dir = '/cygdrive/d/media/'
+        self.__full_path_unix_src_root = self.__root_unix_src_dir + self.__sync_dir
+        self.__win_src_dir = BashProcess.get_form_out_cmd(['cygpath.exe', '--windows', self.__full_path_unix_src_root])
+        self.__root_dest_dir = '/storage/self/primary/'
+
         self.__hdd_info = HddInfo()
-        self.__adb_paths = AdbPaths()
-        self.__logger = self.get_logger()
+        self.__logger = self.crt_logger()
+
+    @property
+    def sync_dir(self):
+        return self.__sync_dir
+
+    @property
+    def root_unix_src_dir(self):
+        return self.__root_unix_src_dir
+
+    @property
+    def full_path_unix_src_root(self):
+        return self.__full_path_unix_src_root
+
+    @property
+    def win_src_dir(self):
+        return self.win_src_dir
+
+    @property
+    def root_dest_dir(self):
+        return self.root_dest_dir
 
     @property
     def hdd_info(self):
@@ -24,10 +49,6 @@ class SyncMusic:
     @property
     def bash_proc(self):
         return self.__bash_proc
-
-    @property
-    def adb_paths(self):
-        return self.__adb_paths
 
     @property
     def logger(self):
@@ -46,11 +67,11 @@ class SyncMusic:
 
     def is_exist_rem_dir(self):
         # if directory is exist, command will be returned 0, otherwise 1
-        cmd_is_exist_dir = ['adb', 'shell', '[ -d ' + self.adb_paths.root_dest_dir
-                            + self.adb_paths.sync_dir + ' ] && echo 0 || echo 1']
+        cmd_is_exist_dir = ['adb', 'shell', '[ -d ' + self.root_dest_dir
+                            + self.sync_dir + ' ] && echo 0 || echo 1']
         # if directory is empty, command will be returned 1, otherwise 0
         cmd_is_empty_dir = ['adb', 'shell',
-                            'find ' + self.adb_paths.root_dest_dir + self.adb_paths.sync_dir +
+                            'find ' + self.root_dest_dir + self.sync_dir +
                             ' -mindepth 1 -maxdepth 1 | '
                             'read && echo 0 || echo 1']  # 0 - not empty, 1 - empty
 
@@ -68,7 +89,7 @@ class SyncMusic:
         if is_exist == '1' and is_empty == '1':
             # adb push
             print('Music folder not exist')
-            cmd_adb_mkdir = ['adb', 'shell', 'mkdir', self.adb_paths.root_dest_dir + self.adb_paths.sync_dir]
+            cmd_adb_mkdir = ['adb', 'shell', 'mkdir', self.root_dest_dir + self.sync_dir]
             BashProcess.run_cmd(cmd_adb_mkdir)
             self.upload(cmd_adb_push, list_loc_files)
 
@@ -82,7 +103,7 @@ class SyncMusic:
             print('Music folder exist and not empty')
             list_rem_files = self.get_rem_files()
 
-            list_del_files = ['"' + self.adb_paths.root_dest_dir + i +
+            list_del_files = ['"' + self.root_dest_dir + i +
                               '"' for i in list(set(list_rem_files) -
                                                 set(list_loc_files))]
 
@@ -108,8 +129,8 @@ class SyncMusic:
 
             # Utility 'find' removing empty folders
             cmd_del_empt_dir = ['adb', 'shell',
-                                'find ' + self.adb_paths.root_dest_dir
-                                + self.adb_paths.sync_dir + ' -type d -delete']
+                                'find ' + self.root_dest_dir
+                                + self.sync_dir + ' -type d -delete']
 
             str_empty_dirs = BashProcess.get_form_out_cmd(cmd_del_empt_dir)
             if str_empty_dirs != '':
@@ -120,16 +141,16 @@ class SyncMusic:
                     self.__logger.info('Deletable directory: ' + i)
 
     def get_loc_files(self):
-        os.chdir(self.adb_paths.root_unix_src_dir)
-        cmd_get_loc_files = ['find', self.adb_paths.sync_dir, '-type', 'f']
+        os.chdir(self.root_unix_src_dir)
+        cmd_get_loc_files = ['find', self.sync_dir, '-type', 'f']
         list_loc_files = BashProcess.get_form_out_cmd(cmd_get_loc_files).split('\n')
         return list_loc_files
 
     def get_rem_files(self):
         cmd_adb_get_rem_files = ['adb', 'shell', 'cd '
-                                 + self.adb_paths.root_dest_dir
+                                 + self.root_dest_dir
                                  + ' && find '
-                                 + self.adb_paths.sync_dir
+                                 + self.sync_dir
                                  + ' -type f']
 
         list_rem_files = BashProcess.get_form_out_cmd(cmd_adb_get_rem_files).split('\n')
@@ -142,8 +163,8 @@ class SyncMusic:
         cmd_conv_path = ['cygpath.exe', '--windows', '']
 
         for idx, val in enumerate(loc_files):
-            command[len(command) - 1] = self.adb_paths.root_dest_dir + val
-            val = self.adb_paths.root_unix_src_dir + val
+            command[len(command) - 1] = self.root_dest_dir + val
+            val = self.root_unix_src_dir + val
             cmd_conv_path[len(cmd_conv_path) - 1] = val
             val = BashProcess.get_form_out_cmd(cmd_conv_path)
             command[len(command) - 2] = val
@@ -158,7 +179,7 @@ class SyncMusic:
                 print(form_err)
                 self.logger.error(form_err)
 
-    def get_logger(self):
+    def crt_logger(self):
         """
         Creating file of logging and Logger object with custom preset.
         @return: instance of logger
@@ -175,10 +196,12 @@ class SyncMusic:
 
         return logging.getLogger()
 
+
 def main():
     sync_music = SyncMusic()
 
     is_exist, is_empty = sync_music.is_exist_rem_dir()
     sync_music.prep_transf(is_exist, is_empty)
+
 
 main()
