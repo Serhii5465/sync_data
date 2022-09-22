@@ -1,13 +1,12 @@
 alias inst='sudo apt install'
 alias fix='sudo apt install -f'
-alias сдс='clear'
+alias пїЅпїЅпїЅ='clear'
 alias clc='clear'
 alias autoremove='sudo apt autoremove'
 alias gedit='sudo gedit'
 alias deb='sudo dpkg -i'
 alias relb='source ~/.bashrc'
 alias update='sudo apt update'
-alias cddown='cd ~/Загрузки/'
 
 #git aliases
 alias pull='git pull'
