@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from src.data.hdd_info import HddInfo
+from src.hdd_info import HddInfo
 from src.bash_process import BashProcess
 from src.date import Date
 from src.log import Log
