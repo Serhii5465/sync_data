@@ -12,7 +12,7 @@ class HddInfo:
     def hitachi_drive():
         # Hitachi 500Gb (Maiwo External Enclosure)
         return {
-            'uuid': '74FAE577FAE53650',
+            'uuid': 'B0F014FAF014C90C',
             'name': 'Hitachi (Maiwo)'
         }
 
