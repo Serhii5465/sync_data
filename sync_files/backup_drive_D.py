@@ -1,52 +1,47 @@
-import argparse
-import glob
-from src.mnt import Mount
-from src.hdd_info import HddInfo
-from src.upl import Upload
-from src.log import Log
+from src import mnt, hdd_info, upl, log
 
 
 class BackupDriveD:
 
     def __init__(self) -> None:
-        self.__uuid_src_drive = HddInfo.dell_3576_drive().get('uuid')
+        self.__uuid_src_drive = hdd_info.dell_3576_drive().get('uuid')
 
         # Output: '/cygdrive/d'
-        self.__root_pth_src_drive = Mount.get_src_drive(self.__uuid_src_drive)
+        self.__root_pth_src_drive = mnt.get_src_drive(self.__uuid_src_drive)
 
         # Output: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
-        self.__root_pth_dest_drive, self.__disk_data = Mount.get_recv_drive()
+        self.__root_pth_dest_drive, self.__disk_data = mnt.get_recv_drive()
 
         self.__name_model_recv_drive = self.__disk_data.get('name')
 
         self.__full_path_dest_dir = self.__root_pth_dest_drive + '/dell_inspiron_3576'
 
         # Output: '/cygdrive/d/logs/drive_D'
-        self.__path_logs_dir = Log.get_logs_dir('drive_D')
+        self.__path_logs_dir = log.get_logs_dir('drive_D')
 
         self.__rsync_test_mode_upl = [
             'rsync',
-            '--recursive',              # copy directories recursively
-            '--perms',                  # preserve permissions
-            '--times',                  # preserve modification time
-            '--group',                  # preserve group
-            '--owner',                  # preserve owner (super-user only)
-            '--devices',                # preserve device files (super-user only)
-            '--specials',               # preserve special files
-            '--human-readable',         # output numbers in a human-readable format
-            '--dry-run',                # perform a trial run with no changes made
-            '--stats',                  # give some file-transfer stats
-            '--progress',               # show progress during transfer
-            '--del',                    # receiver deletes during xfer, not before
-            '--verbose',                # increase verbosity
-            '--copy-links',             # transform symlink into referent file/dir
+            '--recursive',  # copy directories recursively
+            '--perms',  # preserve permissions
+            '--times',  # preserve modification time
+            '--group',  # preserve group
+            '--owner',  # preserve owner (super-user only)
+            '--devices',  # preserve device files (super-user only)
+            '--specials',  # preserve special files
+            '--human-readable',  # output numbers in a human-readable format
+            '--dry-run',  # perform a trial run with no changes made
+            '--stats',  # give some file-transfer stats
+            '--progress',  # show progress during transfer
+            '--del',  # receiver deletes during xfer, not before
+            '--verbose',  # increase verbosity
+            '--copy-links',  # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
             '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
-            '',                         # path to log file
-            '',                         # source
+            '',  # path to log file
+            '',  # source
             self.__full_path_dest_dir
         ]
 
@@ -135,12 +130,13 @@ class BackupDriveD:
             'is_dry_run': False
         }
 
-        Upload.upload_files(dict_rsync_test_md)
-        Upload.upload_files(dict_rsync_base_md)
+        upl.upload_files(dict_rsync_test_md)
+        upl.upload_files(dict_rsync_base_md)
 
 
 def main():
     backup = BackupDriveD()
     backup.prepare_sync_data()
+
 
 main()

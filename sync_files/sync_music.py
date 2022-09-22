@@ -1,25 +1,20 @@
 import os
 import sys
 import logging
-from src.hdd_info import HddInfo
-from src.bash_process import BashProcess
-from src.date import Date
-from src.log import Log
+from src import hdd_info, bash_process, date, log
 
 
 class SyncMusic:
 
     def __init__(self):
-        self.__bash_proc = BashProcess()
         self.get_stat_dev()
 
         self.__sync_dir = 'Music/'
         self.__root_unix_src_dir = '/cygdrive/d/media/'
         self.__full_path_unix_src_root = self.__root_unix_src_dir + self.__sync_dir
-        self.__win_src_dir = BashProcess.get_form_out_cmd(['cygpath.exe', '--windows', self.__full_path_unix_src_root])
+        self.__win_src_dir = bash_process.get_form_out_cmd(['cygpath.exe', '--windows', self.__full_path_unix_src_root])
         self.__root_dest_dir = '/storage/self/primary/'
 
-        self.__hdd_info = HddInfo()
         self.__logger = self.crt_logger()
 
     @property
@@ -43,14 +38,6 @@ class SyncMusic:
         return self.root_dest_dir
 
     @property
-    def hdd_info(self):
-        return self.__hdd_info
-
-    @property
-    def bash_proc(self):
-        return self.__bash_proc
-
-    @property
     def logger(self):
         return self.__logger
 
@@ -60,7 +47,7 @@ class SyncMusic:
         """
         serial_no = '293290c6'
         cmd_state = ['adb', 'devices']
-        out = self.__bash_proc.get_form_out_cmd(cmd_state)
+        out = bash_process.get_form_out_cmd(cmd_state)
 
         if out.find(serial_no) == -1:
             sys.exit('Device not connected')
@@ -75,8 +62,8 @@ class SyncMusic:
                             ' -mindepth 1 -maxdepth 1 | '
                             'read && echo 0 || echo 1']  # 0 - not empty, 1 - empty
 
-        is_exist = BashProcess.get_form_out_cmd(cmd_is_exist_dir)
-        is_empty = BashProcess.get_form_out_cmd(cmd_is_empty_dir)
+        is_exist = bash_process.get_form_out_cmd(cmd_is_exist_dir)
+        is_empty = bash_process.get_form_out_cmd(cmd_is_empty_dir)
 
         return is_exist, is_empty
 
@@ -90,7 +77,7 @@ class SyncMusic:
             # adb push
             print('Music folder not exist')
             cmd_adb_mkdir = ['adb', 'shell', 'mkdir', self.root_dest_dir + self.sync_dir]
-            BashProcess.run_cmd(cmd_adb_mkdir)
+            bash_process.run_cmd(cmd_adb_mkdir)
             self.upload(cmd_adb_push, list_loc_files)
 
         if is_exist == '0' and is_empty == '1':
@@ -122,7 +109,7 @@ class SyncMusic:
                 print(i)
                 self.__logger.info('Deletable file: ' + i)
                 cmd_del_file[len(cmd_del_file) - 1] = i
-                out = BashProcess.get_cmd_output(cmd_del_file)
+                out = bash_process.get_cmd_output(cmd_del_file)
                 if out.returncode != 0:
                     print(out.stderr)
                     self.__logger.error(out.stderr)
@@ -132,7 +119,7 @@ class SyncMusic:
                                 'find ' + self.root_dest_dir
                                 + self.sync_dir + ' -type d -delete']
 
-            str_empty_dirs = BashProcess.get_form_out_cmd(cmd_del_empt_dir)
+            str_empty_dirs = bash_process.get_form_out_cmd(cmd_del_empt_dir)
             if str_empty_dirs != '':
                 print('Removing empty directories')
                 list_empty_dirs = str_empty_dirs.split('\n')
@@ -143,7 +130,7 @@ class SyncMusic:
     def get_loc_files(self):
         os.chdir(self.root_unix_src_dir)
         cmd_get_loc_files = ['find', self.sync_dir, '-type', 'f']
-        list_loc_files = BashProcess.get_form_out_cmd(cmd_get_loc_files).split('\n')
+        list_loc_files = bash_process.get_form_out_cmd(cmd_get_loc_files).split('\n')
         return list_loc_files
 
     def get_rem_files(self):
@@ -153,7 +140,7 @@ class SyncMusic:
                                  + self.sync_dir
                                  + ' -type f']
 
-        list_rem_files = BashProcess.get_form_out_cmd(cmd_adb_get_rem_files).split('\n')
+        list_rem_files = bash_process.get_form_out_cmd(cmd_adb_get_rem_files).split('\n')
         return list_rem_files
 
     def upload(self, command, loc_files):
@@ -166,9 +153,9 @@ class SyncMusic:
             command[len(command) - 1] = self.root_dest_dir + val
             val = self.root_unix_src_dir + val
             cmd_conv_path[len(cmd_conv_path) - 1] = val
-            val = BashProcess.get_form_out_cmd(cmd_conv_path)
+            val = bash_process.get_form_out_cmd(cmd_conv_path)
             command[len(command) - 2] = val
-            out = BashProcess.get_cmd_output(command)
+            out = bash_process.get_cmd_output(command)
 
             if out.returncode == 0:
                 form_out = out.stdout.strip('\n')
@@ -185,8 +172,8 @@ class SyncMusic:
         @return: instance of logger
         """
         create_subfolder = False
-        date_now = Date.get_time_now()
-        path_logs_dir = Log.get_logs_dir('adb_sync_Redmi-Note-9-Pro', create_subfolder)
+        date_now = date.get_time_now()
+        path_logs_dir = log.get_logs_dir('adb_sync_Redmi-Note-9-Pro', create_subfolder)
         full_path_log_file = path_logs_dir + '/' + date_now + '.log'
 
         log_format = "%(levelname)s %(asctime)s - %(message)s"

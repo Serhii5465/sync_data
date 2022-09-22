@@ -2,43 +2,39 @@ import subprocess
 import sys
 
 
-class BashProcess:
+def get_cmd_output(command):
+    """
+    Execution Unix command in separate process.
+    Wait for command to complete, then return instance's [CompletedProcess] class.
+    Parameter [capture_output] is responsible for capture stdout/stderr and store their
+    outputs in variable.
+    Parameter [text=True] interpreters outputs stdout/stderr in human-readable format.
+    Default value [text] = False, and it means all inputs/output is accepted as binary data.
+    :param command: array which contains name Unix utility and her argument's execution
+    :return: instance of [CompletedProcess]
+    """
+    return subprocess.run(command, capture_output=True, text=True)
 
-    @staticmethod
-    def get_cmd_output(command):
-        """
-        Execution Unix command in separate process.
-        Wait for command to complete, then return instance's [CompletedProcess] class.
-        Parameter [capture_output] is responsible for capture stdout/stderr and store their
-        outputs in variable.
-        Parameter [text=True] interpreters outputs stdout/stderr in human-readable format.
-        Default value [text] = False, and it means all inputs/output is accepted as binary data.
-        :param command: array which contains name Unix utility and her argument's execution
-        :return: instance of [CompletedProcess]
-        """
-        return subprocess.run(command, capture_output=True, text=True)
 
-    # get output command in real time
-    @staticmethod
-    def run_cmd(command):
-        """
-        Execution Unix command with arguments in separate process.
-        Wait for command to complete, then return instance of the [CompletedProcess] class.
-        Parameter [stderr = sys.stderr] implies that all errors events will be redirected to
-        standard error stream.
-        Parameter [stdout=sys.stdout] implies that all output data will be redirected to
-        standard output stream.
-        :param command: array which contains name Unix utility and her argument's execution
-        :return: instance of [CompletedProcess]
-        """
-        return subprocess.run(command, stderr=sys.stderr, stdout=sys.stdout)
+def run_cmd(command):
+    """
+    Execution Unix command with arguments in separate process.
+    Wait for command to complete, then return instance of the [CompletedProcess] class.
+    Parameter [stderr = sys.stderr] implies that all errors events will be redirected to
+    standard error stream.
+    Parameter [stdout=sys.stdout] implies that all output data will be redirected to
+    standard output stream.
+    :param command: array which contains name Unix utility and her argument's execution
+    :return: instance of [CompletedProcess]
+    """
+    return subprocess.run(command, stderr=sys.stderr, stdout=sys.stdout)
 
-    @staticmethod
-    def get_form_out_cmd(arg):
-        """
-        Execution command in separate process and returning output stdout
-        without separator of new line
-        @param arg: List of command of with arguments
-        @return: Formatted output
-        """
-        return BashProcess.get_cmd_output(arg).stdout.strip('\n')
+
+def get_form_out_cmd(arg):
+    """
+    Execution command in separate process and returning output stdout
+    without separator of new line
+    @param arg: List of command of with arguments
+    @return: Formatted output
+    """
+    return get_cmd_output(arg).stdout.strip('\n')

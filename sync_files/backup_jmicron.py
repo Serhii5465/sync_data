@@ -1,36 +1,34 @@
 import glob
 import os
-from src.mnt import Mount
-from src.hdd_info import HddInfo
-from src.log import Log
-from src.upl import Upload
+from src import mnt, hdd_info, log, upl
+
 
 class BackupJmicron:
 
     def __init__(self) -> None:
-        self.__src_drive = Mount.get_src_drive(HddInfo.jmicron_drive().get('uuid'))
+        self.__src_drive = mnt.get_src_drive(hdd_info.jmicron_drive().get('uuid'))
 
-        self.__recv_drive, self.__disk_data = Mount.get_recv_drive()
+        self.__recv_drive, self.__disk_data = mnt.get_recv_drive()
         self.__name_model_recv_drive = self.__disk_data.get('name')
         self.__path_destination = self.__recv_drive + '/jmicron'
 
-        self.__logs_dir = Log.get_logs_dir('jmicron')
+        self.__logs_dir = log.get_logs_dir('jmicron')
 
         self.__rsync_upl_test_mode = [
             'rsync',
-            '--recursive',          # copy directories recursively
-            '--perms',              # preserve permissions
-            '--times',              # preserve modification time
-            '--group',              # preserve group
-            '--owner',              # preserve owner (super-user only)
-            '--devices',            # preserve device files (super-user only)
-            '--specials',           # preserve special files
-            '--human-readable',     # output numbers in a human-readable format
-            '--dry-run',            # perform a trial run with no changes made
-            '--stats',              # give some file-transfer stats
-            '--progress',           # show progress during transfer
-            '--del',                # receiver deletes during xfer, not before
-            '--verbose',            # increase verbosity
+            '--recursive',  # copy directories recursively
+            '--perms',  # preserve permissions
+            '--times',  # preserve modification time
+            '--group',  # preserve group
+            '--owner',  # preserve owner (super-user only)
+            '--devices',  # preserve device files (super-user only)
+            '--specials',  # preserve special files
+            '--human-readable',  # output numbers in a human-readable format
+            '--dry-run',  # perform a trial run with no changes made
+            '--stats',  # give some file-transfer stats
+            '--progress',  # show progress during transfer
+            '--del',  # receiver deletes during xfer, not before
+            '--verbose',  # increase verbosity
             '--out-format="%t %f %''b"',
             '',
             '',
@@ -82,6 +80,7 @@ class BackupJmicron:
     def rsync_upl(self):
         return self.__rsync_upl
 
+
 def main():
     jmicron = BackupJmicron()
 
@@ -108,8 +107,8 @@ def main():
         'is_dry_run': False
     }
 
-    Upload.upload_files(test_mode_rsync_upl)
-    Upload.upload_files(base_mode_rsync_upl)
+    upl.upload_files(test_mode_rsync_upl)
+    upl.upload_files(base_mode_rsync_upl)
 
 
 main()
