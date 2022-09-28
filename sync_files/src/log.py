@@ -1,15 +1,21 @@
 from pathlib import Path
-import date
+from src import date
 
 
-def get_logs_dir(name_dir, add_subfolder=True):
+def get_logs_dir(name_dir: str, add_subfolder=True) -> str:
     """
     Function creates all hierarchy parent and child's directories
     and return their all path.
-    :param name_dir: name parent log directory
-    :param add_subfolder: creates specific subdir for log file.Otherwise, nothing happens.
-    :return: full path to log's file
+
+    Args:
+        name_dir: Name parent log directory.
+        add_subfolder:  Creates specific subdir for log file.
+        Otherwise, nothing happens.
+
+    Returns:
+        Full path to log's file.
     """
+
     date_now = date.get_time_now()
 
     if add_subfolder:

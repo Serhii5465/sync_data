@@ -1,25 +1,26 @@
 import sys
-import hdd_info
-import mnt
-import bash_process
+from typing import Union, Tuple
+from src import bash_process
+from src.hdd_info import HDDInfo
 
 
-def get_recv_drive():
+def get_recv_drive() -> Tuple[str, str]:
     """
-    Function checks if mounted one of HDD-receivers and returns
-    path of mount point of the partition-receiver and info about HDD (name and UUID).
-    Otherwise, if no one of HDD-receivers not mounted,
-    script will be finishes.
-    :return: 1: path to the mount point; 2: information about disk
+    Iterates a list with the UUIDs of the receiver disks
+    and checks if any of them are mounted.
+    Returns:
+        If none of the disks are mounted, the script terminates. Otherwise, tuple with
+        UUID partition and path to the root of partition HDD-receiver in UNIX style.
     """
+    hdd_info = HDDInfo()
 
     uuids = [
-        hdd_info.wd_drive(),
-        hdd_info.hitachi_drive()
+        hdd_info.wd_drive,
+        hdd_info.hitachi_drive
     ]
 
     for i in uuids:
-        recv = mnt.get_mount_point(i.get('uuid'))
+        recv = get_mount_point(i.get('uuid'))
         if recv is not None:
             return recv, i
 
@@ -27,12 +28,15 @@ def get_recv_drive():
         sys.exit('Receiver-disk is not mounted')
 
 
-def get_mount_point(uuid_drive):
+def get_mount_point(uuid_drive: str) -> Union[None, str]:
     """
     Converts UUID partition to UNIX-format path's mount point.
     If partition not mounted, script will be stops his work.
-    :param uuid_drive: universally unique identifier partition of HDD
-    :return: Unix-like format path to the mount point of specific partition
+    Args:
+        uuid_drive: Universal Unique Identifier partition of HDD.
+
+    Returns:
+        If HDD not mounted, returns None. Otherwise, path to the root of partition HDD in UNIX style.
     """
 
     name_block_dev = bash_process.get_cmd_output(['blkid', '--uuid', uuid_drive])  # stdout example: /dev/sda1\n
@@ -67,14 +71,17 @@ def get_mount_point(uuid_drive):
         return unix_mnt_point
 
 
-def get_src_drive(uuid_drive):
+def get_src_drive(uuid_drive: str) -> str:
     """
-    Checks if source-HDD mounted
-    :param uuid_drive: universally unique identifier of the source-partition drive
-    :return: if false, script terminates.
-    Otherwise, return full path to mount point of source-partition drive
+    Checks if source-HDD mounted.
+    Args:
+        uuid_drive: Universal Unique Identifier partition of HDD-transmitter.
+
+    Returns:
+        If HDD not mounted, script terminates. Otherwise, path 
+        to the root of partition HDD-source in UNIX style.
     """
-    source = mnt.get_mount_point(uuid_drive)
+    source = get_mount_point(uuid_drive)
     if source is None:
         sys.exit('Source-disk is not mounted')
     else:

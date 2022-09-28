@@ -1,24 +1,35 @@
-from src import mnt, hdd_info, upl, log
+from typing import List
+
+from src import mnt, upl, log
+from src.hdd_info import HDDInfo
 
 
 class BackupDriveD:
-
+    """
+    Class represents information for synchronization of partition on HDD Dell Inspiron
+    with 3.5" external HDDs in Maiwo Enclosure.
+    """
     def __init__(self) -> None:
-        self.__uuid_src_drive = hdd_info.dell_3576_drive().get('uuid')
+        #: str: UUID partition of HDD-source
+        self.__uuid_src_drive = HDDInfo().dell_3576_drive.get('uuid')
 
-        # Output: '/cygdrive/d'
+        #: str Path to the root of partition HDD-source: '/cygdrive/d'
         self.__root_pth_src_drive = mnt.get_src_drive(self.__uuid_src_drive)
 
-        # Output: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
+        #: Tuple(str, str): UUID partition and path to the root of partition HDD-receiver:
+        # root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
         self.__root_pth_dest_drive, self.__disk_data = mnt.get_recv_drive()
 
+        #: str: Name model of HDD-receiver
         self.__name_model_recv_drive = self.__disk_data.get('name')
 
+        #: str: Full path to the root dir of sync on HDD-receiver
         self.__full_path_dest_dir = self.__root_pth_dest_drive + '/dell_inspiron_3576'
 
-        # Output: '/cygdrive/d/logs/drive_D'
+        #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
         self.__path_logs_dir = log.get_logs_dir('drive_D')
 
+        #: list(str): List of arguments of execution Rsync in dry-run mode
         self.__rsync_test_mode_upl = [
             'rsync',
             '--recursive',  # copy directories recursively
@@ -45,6 +56,7 @@ class BackupDriveD:
             self.__full_path_dest_dir
         ]
 
+        #: list(str): List of arguments of execution Rsync in base mode
         self.__rsync_base_mode_upl = [
             'rsync',
             '--recursive',
@@ -70,6 +82,7 @@ class BackupDriveD:
             self.__full_path_dest_dir
         ]
 
+        #: list(str): The list of synchronizable folders.
         self.__list_sync_dirs = [
             'backups',
             'documents',
@@ -78,38 +91,43 @@ class BackupDriveD:
             'VirtualBox_VMs']
 
     @property
-    def uuid_src_drive(self):
+    def uuid_src_drive(self) -> str:
         return self.__uuid_src_drive
 
     @property
-    def root_pth_src_drive(self):
+    def root_pth_src_drive(self) -> str:
         return self.__root_pth_src_drive
 
     @property
-    def name_model_recv_drive(self):
+    def name_model_recv_drive(self) -> str:
         return self.__name_model_recv_drive
 
     @property
-    def full_path_dest_dir(self):
+    def full_path_dest_dir(self) -> str:
         return self.__full_path_dest_dir
 
     @property
-    def path_logs_dir(self):
+    def path_logs_dir(self) -> str:
         return self.__path_logs_dir
 
     @property
-    def rsync_test_mode_upl(self):
+    def rsync_test_mode_upl(self) -> List[str]:
         return self.__rsync_test_mode_upl
 
     @property
-    def rsync_base_mode_upl(self):
+    def rsync_base_mode_upl(self) -> List[str]:
         return self.__rsync_base_mode_upl
 
     @property
-    def list_sync_dirs(self):
+    def list_sync_dirs(self) -> List[str]:
         return self.__list_sync_dirs
 
-    def prepare_sync_data(self):
+    def prepare_sync_data(self) -> None:
+        """
+        Prepares data for synchronization.
+        """
+
+        #: Creates list of full paths to folders for sync.
         list_full_path_sync_dirs = [self.__root_pth_src_drive + '/' + i for i in self.__list_sync_dirs]
 
         dict_rsync_test_md = {
