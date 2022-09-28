@@ -16,7 +16,7 @@ function backup_drive_C ()
 {
     ROOT_DIR_SRC="/cygdrive/c/portable" 
     ROOT_RIR_DEST="/cygdrive/d/backups/others"
-    DIR_CONF_CYGWIN="$ROOT_RIR_DEST"/"cygwin_configs"
+    DIR_CONF_CYGWIN="$ROOT_RIR_DEST"/"configs/cygwin_configs"
 
     rsync \
     --recursive \
