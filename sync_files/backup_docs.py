@@ -32,7 +32,11 @@ class BackupDocuments:
     def logs_dir(self) -> str:
         return self.__logs_dir
 
-    def check_files(*list_files: List[str]) -> None:
+    @property
+    def sync_dir(self):
+        return self.__sync_dir
+
+    def check_files(self, *list_files: List[str]) -> None:
         """
         Verifies if the path to a folder or file is valid. If at least one path is broken,
         the script terminates.
@@ -51,7 +55,7 @@ class BackupDocuments:
         Otherwise, the process has an exit code different from 0 and the script terminates.
         """
         #: Converting Unix-like path to Windows form by using Cygpath.exe utility.
-        win_style_path_sync_dir = bash_process.get_cmd_output(['cygpath', '--windows', self.__sync_dir])
+        win_style_path_sync_dir = bash_process.get_cmd_output(['cygpath', '--windows', self.sync_dir])
         win_style_path_logs_dir = bash_process.get_cmd_output(['cygpath', '--windows', self.logs_dir])
 
         date_now = date.get_time_now()
