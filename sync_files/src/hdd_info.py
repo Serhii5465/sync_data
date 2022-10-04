@@ -23,7 +23,7 @@ class HDDInfo:
 
         #: Wester Digital 1Tb (Dell Inspiron 15 3576)
         self.__dell_3576_drive = {
-            'uuid': 'CE0E2EF20E2ED36F'
+            'uuid': 'E472700B726FE0B2'
         }
 
         #: 2.5″ Western Digital 320Gb (JMicron)
