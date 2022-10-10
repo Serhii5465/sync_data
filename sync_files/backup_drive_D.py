@@ -51,6 +51,7 @@ class BackupDriveD:
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
+            '--exclude=dell_inspiron_3576/',
             '',  # path to log file
             '',  # source
             self.__full_path_dest_dir
@@ -77,6 +78,7 @@ class BackupDriveD:
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
+            '--exclude=dell_inspiron_3576/',
             '',
             '',
             self.__full_path_dest_dir

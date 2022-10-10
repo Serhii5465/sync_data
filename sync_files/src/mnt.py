@@ -16,7 +16,8 @@ def get_recv_drive() -> Tuple[str, str]:
 
     uuids = [
         hdd_info.wd_drive,
-        hdd_info.hitachi_drive
+        hdd_info.hitachi_drive,
+        hdd_info.jmicron_drive
     ]
 
     for i in uuids:
