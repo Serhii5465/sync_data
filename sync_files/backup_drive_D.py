@@ -17,11 +17,14 @@ class BackupDriveD:
         self.__root_pth_src_drive = mnt.get_src_drive(self.__uuid_src_drive)
 
         #: Tuple(str, str): UUID partition and path to the root of partition HDD-receiver:
-        # root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
+        #: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
         self.__root_pth_dest_drive, self.__disk_data = mnt.get_recv_drive()
 
         #: str: Name model of HDD-receiver
         self.__name_model_recv_drive = self.__disk_data.get('name')
+
+        #: str: UUID of partition HDD-receiver
+        self.__uuid_recv_drive = self.__disk_data.get('uuid')
 
         #: str: Full path to the root dir of sync on HDD-receiver
         self.__full_path_dest_dir = self.__root_pth_dest_drive + '/dell_inspiron_3576'
@@ -105,6 +108,10 @@ class BackupDriveD:
         return self.__name_model_recv_drive
 
     @property
+    def uuid_recv_drive(self):
+        return self.__uuid_recv_drive
+
+    @property
     def full_path_dest_dir(self) -> str:
         return self.__full_path_dest_dir
 
@@ -130,7 +137,13 @@ class BackupDriveD:
         """
 
         #: Creates list of full paths to folders for sync.
-        list_full_path_sync_dirs = [self.__root_pth_src_drive + '/' + i for i in self.__list_sync_dirs]
+        list_full_path_sync_dirs = []
+
+        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid'):
+            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
+                                        + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
+        else:
+            list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
 
         dict_rsync_test_md = {
             'command': self.rsync_test_mode_upl,
