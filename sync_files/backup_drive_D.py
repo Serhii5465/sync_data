@@ -1,5 +1,5 @@
+import argparse
 from typing import List
-
 from src import mnt, upl, log
 from src.hdd_info import HDDInfo
 
@@ -136,13 +136,22 @@ class BackupDriveD:
         Prepares data for synchronization.
         """
 
+        parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
+        parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
+        parser.add_argument('-n', '--no-vdi', action='store_true', help='Copies all files, ignoring virtual disk images (.vdi) used by VirtualBox')
+
+        args = vars(parser.parse_args())
+
+        if not args['all'] and not args['no_vdi']:
+            parser.parse_args(['-h'])
+
         #: Creates list of full paths to folders for sync.
         list_full_path_sync_dirs = []
 
-        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid'):
+        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') or args['no_vdi']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                        + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
-        else:
+                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
+        elif args['all']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
 
         dict_rsync_test_md = {
