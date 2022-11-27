@@ -11,24 +11,24 @@ class HDDInfo:
         """
         #: Wester Digital 1Tb (Maiwo External Enclosure)
         self.__wd_drive = {
-            'uuid': '088C11A28C118AF8',
+            'uuid': '429ED9EB9ED9D80D',
             'name': 'Wester Digital (Maiwo)'
         }
 
         #: Hitachi 500Gb (Maiwo External Enclosure)
         self.__hitachi_drive = {
-            'uuid': 'B0F014FAF014C90C',
+            'uuid': '6CC2DC3FC2DC0F68',
             'name': 'Hitachi (Maiwo)'
         }
 
         #: Wester Digital 1Tb (Dell Inspiron 15 3576)
         self.__dell_3576_drive = {
-            'uuid': 'E472700B726FE0B2'
+            'uuid': 'DC4476D34476B03E'
         }
 
         #: 2.5″ Western Digital 320Gb (JMicron)
         self.__jmicron_drive = {
-            'uuid': '01D8C1D0373750C0',
+            'uuid': '581A0D2A1A0D06AA',
             'name': 'Western Digital (JMicron)'
         }
 
