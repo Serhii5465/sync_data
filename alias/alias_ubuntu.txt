@@ -1,6 +1,5 @@
 alias inst='sudo apt install'
 alias fix='sudo apt install -f'
-alias ���='clear'
 alias clc='clear'
 alias autoremove='sudo apt autoremove'
 alias gedit='sudo gedit'
@@ -15,7 +14,7 @@ alias push='git push'
 alias add='git add'
 
 #ssh aliases
-alias sshstart='sudo systemctl start sshd'
-alias sshstatus='sudo systemctl status sshd'
-alias sshrestart='sudo systemctl restart sshd'
-alias sshstop='sudo systemctl stop sshd'
+alias sshstart='sudo systemctl start ssh'
+alias sshstatus='sudo systemctl status ssh'
+alias sshrestart='sudo systemctl restart ssh'
+alias sshstop='sudo systemctl stop ssh'

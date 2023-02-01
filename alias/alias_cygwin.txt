@@ -11,9 +11,7 @@ alias backup_jmicron='python ~/scripts/sync_files/backup_jmicron.py'
 alias adb_sync_music='python ~/scripts/sync_files/sync_music.py'
 
 
-
-function backup_drive_C ()
-{
+function backup_drive_C (){
     ROOT_DIR_SRC="/cygdrive/c/portable" 
     ROOT_RIR_DEST="/cygdrive/d/backups/others"
     DIR_CONF_CYGWIN="$ROOT_RIR_DEST"/"configs/cygwin_configs"
@@ -51,4 +49,44 @@ function backup_drive_C ()
     ~ "$ROOT_DIR_SRC"/"cygwin64/etc/fstab" "$DIR_CONF_CYGWIN"
 
     cygcheck.exe --check-setup >> "$DIR_CONF_CYGWIN"/"list_packages.txt"
+}
+
+function parser_wo_tcp_vb(){
+    rsync \
+    --recursive \
+    --perms \
+    --times \
+    --group \
+    --owner \
+    --human-readable \
+    --stats \
+    --progress \
+    --del \
+    --verbose \
+    --out-format="%t %f %b" \
+    --exclude=node_modules \
+    --exclude=.gitignore \
+    --exclude=package.json \
+    --exclude=package-lock.json \
+    /cygdrive/d/projects/dissertation/test/master_wo_tcp/ raspvb:~/projects/master_wo_tcp
+}
+
+function parser_wo_tcp_board(){
+    rsync \
+    --recursive \
+    --perms \
+    --times \
+    --group \
+    --owner \
+    --human-readable \
+    --stats \
+    --progress \
+    --del \
+    --verbose \
+    --out-format="%t %f %b" \
+    --exclude=node_modules \
+    --exclude=.gitignore \
+    --exclude=package.json \
+    --exclude=package-lock.json \
+    /cygdrive/d/projects/dissertation/test/master_wo_tcp/ rasp:~/projects/master_wo_tcp
 }
