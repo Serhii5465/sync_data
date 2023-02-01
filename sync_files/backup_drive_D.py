@@ -91,6 +91,7 @@ class BackupDriveD:
         self.__list_sync_dirs = [
             'backups',
             'documents',
+            'films',
             'installers',
             'media',
             'VirtualBox_VMs']

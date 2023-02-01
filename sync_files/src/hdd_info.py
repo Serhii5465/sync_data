@@ -17,7 +17,7 @@ class HDDInfo:
 
         #: Hitachi 500Gb (Maiwo External Enclosure)
         self.__hitachi_drive = {
-            'uuid': '6CC2DC3FC2DC0F68',
+            'uuid': '222A76712A7641B9',
             'name': 'Hitachi (Maiwo)'
         }
 
@@ -28,7 +28,7 @@ class HDDInfo:
 
         #: 2.5″ Western Digital 320Gb (JMicron)
         self.__jmicron_drive = {
-            'uuid': '581A0D2A1A0D06AA',
+            'uuid': 'A88AC8F48AC8C054',
             'name': 'Western Digital (JMicron)'
         }
 
