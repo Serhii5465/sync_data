@@ -1,7 +1,0 @@
-alias clc='clear'
-alias status='git status'
-alias relb='source ~/.bashrc'
-alias push='git push'
-alias add='git add'
-alias pull='git pull'
-alias proj='cd /d/projects/'
