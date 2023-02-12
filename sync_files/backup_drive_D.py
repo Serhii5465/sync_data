@@ -91,10 +91,10 @@ class BackupDriveD:
         self.__list_sync_dirs = [
             'backups',
             'documents',
-            'films',
             'installers',
             'media',
-            'VirtualBox_VMs']
+            'VirtualBox_VMs',
+            'films']
 
     @property
     def uuid_src_drive(self) -> str:
@@ -151,7 +151,7 @@ class BackupDriveD:
 
         if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') or args['no_vdi']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
+                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 2)]
         elif args['all']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
 
