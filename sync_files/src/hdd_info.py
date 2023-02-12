@@ -11,7 +11,7 @@ class HDDInfo:
         """
         #: Wester Digital 1Tb (Maiwo External Enclosure)
         self.__wd_drive = {
-            'uuid': '429ED9EB9ED9D80D',
+            'uuid': 'BABA20AFBA2069D9',
             'name': 'Wester Digital (Maiwo)'
         }
 
@@ -23,12 +23,12 @@ class HDDInfo:
 
         #: Wester Digital 1Tb (Dell Inspiron 15 3576)
         self.__dell_3576_drive = {
-            'uuid': 'DC4476D34476B03E'
+            'uuid': '01D937210A0E5460'
         }
 
         #: 2.5″ Western Digital 320Gb (JMicron)
         self.__jmicron_drive = {
-            'uuid': 'A88AC8F48AC8C054',
+            'uuid': '01D937619AC13910',
             'name': 'Western Digital (JMicron)'
         }
 
