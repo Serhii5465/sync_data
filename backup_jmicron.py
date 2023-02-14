@@ -47,7 +47,6 @@ class BackupJmicron:
             '--verbose',  # increase verbosity
             '--out-format="%t %f %''b"',
             '--exclude=dell_inspiron_3576/',
-            '--exclude=films/', # Folder with films on Dell Inspiron
             '',
             '',
             self.__path_destination
@@ -71,7 +70,6 @@ class BackupJmicron:
             '--verbose',
             '--out-format="%t %f %''b"',
             '--exclude=dell_inspiron_3576/',
-            '--exclude=films/',
             '',
             '',
             self.__path_destination
