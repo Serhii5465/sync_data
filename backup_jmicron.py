@@ -1,5 +1,6 @@
 import glob
 import os
+import time
 from typing import List
 
 from src import mnt, log, upl
@@ -104,6 +105,12 @@ class BackupJmicron:
         """
         Prepares data for synchronization.
         """
+
+        print("\n\n!!!!WARNING!!!!")
+        print('The "Films" and "VirtualBox_VMs" folders from Dell Inspiron 15 HDD will be excluded from sync with jmicron')
+        print("!!!!WARNING!!!!\n\n")
+
+        time.sleep(5)
 
         #: Finds paths all dirs, which located in the root of partition.
         list_full_path_sync_dirs = glob.glob(self.src_drive + '/*')
