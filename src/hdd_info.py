@@ -17,7 +17,7 @@ class HDDInfo:
 
         #: Hitachi 500Gb (Maiwo External Enclosure)
         self.__hitachi_drive = {
-            'uuid': 'FA28BAFC28BAB6CB',
+            'uuid': '9882EA7C82EA5DEE',
             'name': 'Hitachi (Maiwo)'
         }
 
