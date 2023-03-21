@@ -1,4 +1,5 @@
 import argparse
+import sys
 from typing import List
 from src import mnt, upl, log
 from src.hdd_info import HDDInfo
@@ -149,7 +150,12 @@ class BackupDriveD:
         #: Creates list of full paths to folders for sync.
         list_full_path_sync_dirs = []
 
-        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') or args['no_vdi']:
+        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') and args['all']:
+            print('\nThe directory \'VirtualBox_VMs\' cannot be copied to the \'Jmicron\' drive \ndue to his insufficient capacity.' 
+                  'Run the script for this drive with the \'-n\' parameter.')
+            sys.exit()
+
+        if args['no_vdi']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
                                          + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
         elif args['all']:
@@ -174,7 +180,7 @@ class BackupDriveD:
         }
 
         upl.upload_files(dict_rsync_test_md)
-        upl.upload_files(dict_rsync_base_md)
+        # upl.upload_files(dict_rsync_base_md)
 
 
 def main():
