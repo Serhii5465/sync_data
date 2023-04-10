@@ -1,1 +1,1 @@
-This repository is used to store my scripts for synsynchronization data in UNIX-like environments such as Ubuntu and Cygwin.
+This repository is used to store my scripts for synchronization data in UNIX-like environments such as Ubuntu and Cygwin.
