@@ -9,8 +9,8 @@ class SyncRaspberry:
         self.__root_dir_dest = '~/projects/'
 
         self.__proj_prs_serial_port = {
-            'dir' : 'master_wo_tcp',
-            'id' : 'serial'
+            'dir' : 'master_uart',
+            'id' : 'uart'
         }
 
         self.__proj_tcp_client = {
