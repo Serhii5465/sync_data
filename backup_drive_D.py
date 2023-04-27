@@ -94,7 +94,7 @@ class BackupDriveD:
             'documents',
             'installers',
             'media',
-            'VirtualBox_VMs'
+            'virtual_machines'
         ]
 
     @property
