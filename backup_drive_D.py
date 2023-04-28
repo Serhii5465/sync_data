@@ -144,25 +144,36 @@ class BackupDriveD:
         parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
         parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
         parser.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
+        parser.add_argument('--vb', action='store_true', help='Copies only files of virtual machines VirtualBox')
+        parser.add_argument('--hv', action='store_true', help='Copies only files of virtual machines Hyper-V')
 
         args = vars(parser.parse_args())
-
-        if not args['all'] and not args['no_vm']:
+        
+        if True not in (args['all'],  args['no_vm'], args['vb'], args['hv']):
             parser.parse_args(['-h'])
 
         #: Creates list of full paths to folders for sync.
         list_full_path_sync_dirs = []
 
-        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') and args['all']:
-            print('\nThe directory \'VirtualBox_VMs\' cannot be copied to the \'Jmicron\' drive \ndue to his insufficient capacity.' 
+        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') and True in (args['all'], args['vb'], args['hv']):
+            print('\nThe directory of virtual machines cannot be copied to the \'Jmicron\' driver due to his insufficient capacity.\n' 
                   'Run the script for this drive with the \'-n\' parameter.')
             sys.exit()
+        
+        if args['all']:
+            list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
 
-        if args['no_vm']:
+        elif args['no_vm']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
                                          + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 2)]
-        elif args['all']:
-            list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
+
+        elif args['vb']:
+            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
+                                         + self.list_sync_dirs[len(self.list_sync_dirs) - 2]]
+
+        elif args['hv']:
+            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
+                                         + self.list_sync_dirs[len(self.list_sync_dirs) - 1]]
 
         dict_rsync_test_md = {
             'command': self.rsync_test_mode_upl,
