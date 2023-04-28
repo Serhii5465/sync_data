@@ -177,7 +177,6 @@ class BackupDriveD:
 
         dict_rsync_test_md = {
             'command': self.rsync_test_mode_upl,
-            'sync_dirs': self.list_sync_dirs,
             'list_full_path_sync_dirs': list_full_path_sync_dirs,
             'name_model_recv_drive': self.name_model_recv_drive,
             'path_logs_dir': self.path_logs_dir,
@@ -186,7 +185,6 @@ class BackupDriveD:
 
         dict_rsync_base_md = {
             'command': self.rsync_base_mode_upl,
-            'sync_dirs': self.list_sync_dirs,
             'list_full_path_sync_dirs': list_full_path_sync_dirs,
             'name_model_recv_drive': self.name_model_recv_drive,
             'path_logs_dir': self.path_logs_dir,
@@ -194,7 +192,7 @@ class BackupDriveD:
         }
 
         upl.upload_files(dict_rsync_test_md)
-        upl.upload_files(dict_rsync_base_md)
+        # upl.upload_files(dict_rsync_base_md)
 
 
 def main():

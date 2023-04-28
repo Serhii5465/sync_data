@@ -1,4 +1,5 @@
 import sys
+import os.path
 from typing import Dict
 from src import bash_process
 
@@ -32,12 +33,11 @@ def upload_files(data_sync: Dict[str, any]) -> None:
     If there is an error of synchronization, file access rights or something similar,
     the transfer will be terminated.
     Args:
-        data_sync: contains info about: Rsync launch options; folders and
-        their full paths; model of HDD-receiver; full path
+        data_sync: contains info about: Rsync launch options;
+        full paths to synchronized folders; model of HDD-receiver; full path
         to log directory; whether Rsync works in dry-run mode.
     """
     command = data_sync.get('command')
-    sync_dirs = data_sync.get('sync_dirs')
     list_sync_dirs = data_sync.get('list_full_path_sync_dirs')
     name_model_recv_drive = data_sync.get('name_model_recv_drive')
     path_logs_dir = data_sync.get('path_logs_dir')
@@ -48,7 +48,7 @@ def upload_files(data_sync: Dict[str, any]) -> None:
         command[len(command) - 2] = val
 
         # Inserting in array the argument of name log file
-        insert_log_arg(command, is_test_mode, path_logs_dir, name_model_recv_drive, sync_dirs[idx])
+        insert_log_arg(command, is_test_mode, path_logs_dir, name_model_recv_drive, os.path.basename(list_sync_dirs[idx]))
         print('\nStart syncing the ' + '\'' + list_sync_dirs[idx] + '\'' + ' folder\n')
         # Start synchronization
         code = bash_process.run_cmd(command)
