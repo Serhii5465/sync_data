@@ -51,6 +51,7 @@ class BackupDriveD:
             '--verbose',  # increase verbosity
             '--copy-links',  # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
+            '--exclude=Hyper-V',
             '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
@@ -78,6 +79,7 @@ class BackupDriveD:
             '--verbose',
             '--copy-links',
             '--out-format="%t %f %''b"',
+            '--exclude=Hyper-V',
             '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
@@ -94,7 +96,8 @@ class BackupDriveD:
             'documents',
             'installers',
             'media',
-            'images_virtual_machines'
+            'virtual_machines',
+            'hyper_v_export_vm'
         ]
 
     @property
@@ -140,11 +143,11 @@ class BackupDriveD:
 
         parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
         parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
-        parser.add_argument('-n', '--no-vdi', action='store_true', help='Copies all files, ignoring virtual disk images (.vdi) used by VirtualBox')
+        parser.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
 
         args = vars(parser.parse_args())
 
-        if not args['all'] and not args['no_vdi']:
+        if not args['all'] and not args['no_vm']:
             parser.parse_args(['-h'])
 
         #: Creates list of full paths to folders for sync.
@@ -155,9 +158,9 @@ class BackupDriveD:
                   'Run the script for this drive with the \'-n\' parameter.')
             sys.exit()
 
-        if args['no_vdi']:
+        if args['no_vm']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 1)]
+                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 2)]
         elif args['all']:
             list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
 
