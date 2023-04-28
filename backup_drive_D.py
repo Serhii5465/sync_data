@@ -192,7 +192,7 @@ class BackupDriveD:
         }
 
         upl.upload_files(dict_rsync_test_md)
-        # upl.upload_files(dict_rsync_base_md)
+        upl.upload_files(dict_rsync_base_md)
 
 
 def main():
