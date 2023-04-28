@@ -49,7 +49,7 @@ def upload_files(data_sync: Dict[str, any]) -> None:
 
         # Inserting in array the argument of name log file
         insert_log_arg(command, is_test_mode, path_logs_dir, name_model_recv_drive, sync_dirs[idx])
-        print('\nStart syncing the ' + '\'' + sync_dirs[idx] + '\'' + ' folder\n')
+        print('\nStart syncing the ' + '\'' + list_sync_dirs[idx] + '\'' + ' folder\n')
         # Start synchronization
         code = bash_process.run_cmd(command)
 
