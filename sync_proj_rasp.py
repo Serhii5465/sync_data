@@ -37,7 +37,6 @@ class SyncRaspberry:
             '--out-format="%t %f %''b"',
             '--exclude=node_modules',
             '--exclude=.gitignore',
-            '--exclude=package-lock.json',
             '--exclude=logs',
             '',
             ''
