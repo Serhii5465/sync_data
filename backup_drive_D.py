@@ -57,6 +57,8 @@ class BackupDriveD:
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=dell_inspiron_3576/',
+            '--exclude=logs/',
+            '--exclude=node_modules/',
             '',  # path to log file
             '',  # source
             self.__full_path_dest_dir
@@ -85,6 +87,8 @@ class BackupDriveD:
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=dell_inspiron_3576/',
+            '--exclude=logs/',
+            '--exclude=node_modules/',
             '',
             '',
             self.__full_path_dest_dir
@@ -96,6 +100,7 @@ class BackupDriveD:
             'documents',
             'installers',
             'media',
+            'projects',
             'virtual_machines',
             'hyper_v_export_vm'
         ]
