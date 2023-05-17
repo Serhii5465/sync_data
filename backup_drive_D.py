@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import List
+from typing import Dict, List
 from src import mnt, upl, log
 from src.hdd_info import HDDInfo
 
@@ -94,16 +94,16 @@ class BackupDriveD:
             self.__full_path_dest_dir
         ]
 
-        #: list(str): The list of synchronizable folders.
-        self.__list_sync_dirs = [
-            'backups',
-            'documents',
-            'installers',
-            'media',
-            'projects',
-            'virtual_machines',
-            'hyper_v_export_vm'
-        ]
+        #: dict[str, str] : Dictionary with information of synchronized folders.
+        self.__list_sync_dirs = {
+            'backup' : 'backups',
+            'docs' : 'documents',
+            'inst' : 'installers',
+            'media' : 'media',
+            'proj' : 'projects',
+            'vb' : 'virtual_machines',
+            'hv' : 'hyper_v_export_vm'
+        }
 
     @property
     def uuid_src_drive(self) -> str:
@@ -138,7 +138,7 @@ class BackupDriveD:
         return self.__rsync_base_mode_upl
 
     @property
-    def list_sync_dirs(self) -> List[str]:
+    def list_sync_dirs(self) -> Dict[str, str]:
         return self.__list_sync_dirs
 
     def prepare_sync_data(self) -> None:
@@ -147,38 +147,39 @@ class BackupDriveD:
         """
 
         parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
-        parser.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
-        parser.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
-        parser.add_argument('--vb', action='store_true', help='Copies only files of virtual machines VirtualBox')
-        parser.add_argument('--hv', action='store_true', help='Copies only files of virtual machines Hyper-V')
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
+        group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
+        group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronized', 
+                            default=None, 
+                            type=str,
+                            choices=self.list_sync_dirs.keys())
 
         args = vars(parser.parse_args())
-        
-        if True not in (args['all'],  args['no_vm'], args['vb'], args['hv']):
+
+        if len(sys.argv) == 1:
             parser.parse_args(['-h'])
 
         #: Creates list of full paths to folders for sync.
         list_full_path_sync_dirs = []
+        list_name_dirs = []
 
-        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') and True in (args['all'], args['vb'], args['hv']):
+        if self.uuid_recv_drive == HDDInfo().jmicron_drive.get('uuid') and (args['all'] == True or args['folder'] == 'vb' or args['folder'] == 'hv'):
             print('\nThe directory of virtual machines cannot be copied to the \'Jmicron\' driver due to his insufficient capacity.\n' 
                   'Run the script for this drive with the \'-n\' parameter.')
             sys.exit()
         
         if args['all']:
-            list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in self.list_sync_dirs]
+            list_name_dirs = list(self.list_sync_dirs.values())
 
         elif args['no_vm']:
-            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                         + self.list_sync_dirs[i] for i in range(0, len(self.list_sync_dirs) - 2)]
+            list_name_dirs = list(self.list_sync_dirs.values())
+            del list_name_dirs[len(list_name_dirs) - 2: len(list_name_dirs)]
 
-        elif args['vb']:
-            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                         + self.list_sync_dirs[len(self.list_sync_dirs) - 2]]
+        elif args['folder']:
+            list_name_dirs.append(self.list_sync_dirs.get(args['folder']))
 
-        elif args['hv']:
-            list_full_path_sync_dirs = [self.root_pth_src_drive + '/'
-                                         + self.list_sync_dirs[len(self.list_sync_dirs) - 1]]
+        list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in list_name_dirs]
 
         dict_rsync_test_md = {
             'command': self.rsync_test_mode_upl,
