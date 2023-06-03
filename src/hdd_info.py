@@ -28,7 +28,7 @@ class HDDInfo:
 
         #: 2.5″ Western Digital 320Gb (JMicron)
         self.__jmicron_drive = {
-            'uuid': '01D937619AC13910',
+            'uuid': 'CE9A33B69A339A43',
             'name': 'Western Digital (JMicron)'
         }
 
