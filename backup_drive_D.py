@@ -28,7 +28,7 @@ class BackupDriveD:
         self.__uuid_recv_drive = self.__disk_data.get('uuid')
 
         #: str: Full path to the root dir of sync on HDD-receiver
-        self.__full_path_dest_dir = self.__root_pth_dest_drive + '/dell_inspiron_3576'
+        self.__full_path_dest_dir = self.__root_pth_dest_drive + '/msi_gf63'
 
         #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
         self.__path_logs_dir = log.get_logs_dir('drive_D')
@@ -56,7 +56,7 @@ class BackupDriveD:
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
-            '--exclude=dell_inspiron_3576/',
+            '--exclude=msi_gf63/',
             '--exclude=logs/',
             '--exclude=node_modules/',
             '',  # path to log file
@@ -86,7 +86,7 @@ class BackupDriveD:
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
-            '--exclude=dell_inspiron_3576/',
+            '--exclude=msi_gf63/',
             '--exclude=logs/',
             '--exclude=node_modules/',
             '',

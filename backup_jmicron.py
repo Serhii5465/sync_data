@@ -46,7 +46,7 @@ class BackupJmicron:
             '--del',  # receiver deletes during xfer, not before
             '--verbose',  # increase verbosity
             '--out-format="%t %f %''b"',
-            '--exclude=dell_inspiron_3576/',
+            '--exclude=msi_gf63',
             '',
             '',
             self.__path_destination
@@ -69,7 +69,7 @@ class BackupJmicron:
             '--del',
             '--verbose',
             '--out-format="%t %f %''b"',
-            '--exclude=dell_inspiron_3576/',
+            '--exclude=msi_gf63',
             '',
             '',
             self.__path_destination

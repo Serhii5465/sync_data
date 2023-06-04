@@ -21,7 +21,7 @@ class HDDInfo:
             'name': 'Hitachi (Maiwo)'
         }
 
-        #: Wester Digital 1Tb (Dell Inspiron 15 3576)
+        #: Wester Digital 1Tb (MSI GF63)
         self.__dell_3576_drive = {
             'uuid': '01D937210A0E5460'
         }
