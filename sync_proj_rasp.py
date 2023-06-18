@@ -20,7 +20,6 @@ class SyncRaspberry:
 
         self.__id_vb_rasp_1 = 'raspvb1'
         self.__id_vb_rasp_2 = 'raspvb2'
-        self.__id_vb_rasp_3 = 'raspvb3'
         self.__id_board_rasp = 'rasp'
 
         self.__rsync_cmd = [
@@ -68,10 +67,6 @@ class SyncRaspberry:
         return self.__id_vb_rasp_2
 
     @property
-    def id_vb_rasp_3(self) -> str:
-        return self.__id_vb_rasp_3
-
-    @property
     def id_board_rasp(self) -> str:
         return self.__id_board_rasp
 
@@ -86,7 +81,7 @@ class SyncRaspberry:
         obj_proj_list = [self.proj_prs_serial_port, self.proj_tcp_client]
 
         choise_type_list = []
-        choise_dest_list = [self.id_vb_rasp_1, self.id_vb_rasp_2, self.id_vb_rasp_3, self.id_board_rasp]
+        choise_dest_list = [self.id_vb_rasp_1, self.id_vb_rasp_2, self.id_board_rasp]
 
         for i in obj_proj_list:
             choise_type_list.append(i.get('id'))
