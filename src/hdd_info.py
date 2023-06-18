@@ -11,13 +11,13 @@ class HDDInfo:
         """
         #: Wester Digital 1Tb (Maiwo External Enclosure)
         self.__wd_drive = {
-            'uuid': '82AA94D0AA94C1D9',
+            'uuid': '4EB4A2C6B4A2B03F',
             'name': 'Wester Digital (Maiwo)'
         }
 
         #: Hitachi 500Gb (Maiwo External Enclosure)
         self.__hitachi_drive = {
-            'uuid': '9882EA7C82EA5DEE',
+            'uuid': '247AE4E87AE4B826',
             'name': 'Hitachi (Maiwo)'
         }
 
