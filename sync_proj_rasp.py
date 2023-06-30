@@ -18,6 +18,11 @@ class SyncRaspberry:
             'id' : 'tcp'
         }
 
+        self.__proj_raspi_firmw = {
+            'dir' : 'raspi_firmware',
+            'id' : 'all'
+        }
+
         self.__id_vb_rasp_1 = 'raspivb1'
         self.__id_vb_rasp_2 = 'raspivb2'
         self.__id_vb_rasp_3 = 'raspivb3'
@@ -60,6 +65,10 @@ class SyncRaspberry:
         return self.__proj_tcp_client
 
     @property
+    def proj_raspi_firmw(self) -> Dict[str, str]:
+        return self.__proj_raspi_firmw
+
+    @property
     def id_vb_rasp_1(self) -> str:
         return self.__id_vb_rasp_1
 
@@ -83,7 +92,7 @@ class SyncRaspberry:
         parser = argparse.ArgumentParser(description='Synchronization files of projects between PC \
                                           and Raspberry Pi OS (VirtualBox/Raspberry Pi 1 Model B+)')
 
-        obj_proj_list = [self.proj_prs_serial_port, self.proj_tcp_client]
+        obj_proj_list = [self.proj_prs_serial_port, self.proj_tcp_client, self.proj_raspi_firmw]
 
         choise_type_list = []
         choise_dest_list = [self.id_vb_rasp_1, self.id_vb_rasp_2, self.id_vb_rasp_3, self.id_board_rasp]
