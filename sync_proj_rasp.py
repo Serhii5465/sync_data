@@ -18,10 +18,10 @@ class SyncRaspberry:
             'id' : 'tcp'
         }
 
-        self.__id_vb_rasp_1 = 'raspvb1'
-        self.__id_vb_rasp_2 = 'raspvb2'
-        self.__id_vb_rasp_3 = 'raspvb3'
-        self.__id_board_rasp = 'rasp'
+        self.__id_vb_rasp_1 = 'raspivb1'
+        self.__id_vb_rasp_2 = 'raspivb2'
+        self.__id_vb_rasp_3 = 'raspivb3'
+        self.__id_board_rasp = 'raspi'
 
         self.__rsync_cmd = [
             'rsync',
