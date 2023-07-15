@@ -96,11 +96,12 @@ class BackupDriveD:
 
         #: dict[str, str] : Dictionary with information of synchronized folders.
         self.__list_sync_dirs = {
-            'backup' : 'backups',
-            'docs' : 'documents',
-            'inst' : 'installers',
+            'backups' : 'backups',
+            'configs' : 'configs',
+            'documents' : 'documents',
+            'installers' : 'installers',
             'media' : 'media',
-            'proj' : 'projects',
+            'projects' : 'projects',
             'vb' : 'virtual_machines',
             'hv' : 'hyper_v_export_vm'
         }
