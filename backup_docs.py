@@ -18,13 +18,10 @@ class BackupDocuments:
         #: str: Path to Rclone's config
         self.__rclone_conf = str(Path.home()) + '/.config/rclone/rclone.conf'
 
-        #: str: The root dir, where located exe file Rclone
-        self.__rclone_prog_dir = '/cygdrive/c/portable/rclone'
-
         #: The root of the folder to be synchronized
         self.__sync_dir = '/cygdrive/d/documents'
 
-        self.check_files(self.__rclone_prog_dir, self.__rclone_conf, self.__sync_dir)
+        self.check_files(self.__rclone_conf, self.__sync_dir)
 
         #: Path to logs dir.
         self.__logs_dir = log.get_logs_dir('rclone', add_subfolder=False)
@@ -82,12 +79,8 @@ class BackupDocuments:
 
         date_now = date.get_time_now()
 
-        command = [self.__rclone_prog_dir + '/rclone.exe',
-                                    'sync',
-                                    '--progress',
-                                    '--verbose',
-                                    '--log-file=' + win_style_path_logs_dir.stdout.strip(
-                                        '\n') + '/' + date_now + '.log']
+        command = ['rclone', 'sync', '--progress', '--verbose',
+                    '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date_now + '.log']
 
         if args['upload']:
             command.insert(4, win_style_path_sync_dir.stdout.strip('\n'))
