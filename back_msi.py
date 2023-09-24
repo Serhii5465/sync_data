@@ -5,14 +5,14 @@ from src import mnt, upl, log
 from src.hdd_info import HDDInfo
 
 
-class BackupDriveD:
+class BackupMsi:
     """
-    Class represents information for synchronization of partition on HDD Dell Inspiron
+    Class represents information for synchronization of partition on HDD MSI
     with 3.5" external HDDs in Maiwo Enclosure.
     """
     def __init__(self) -> None:
         #: str: UUID partition of HDD-source
-        self.__uuid_src_drive = HDDInfo().dell_3576_drive.get('uuid')
+        self.__uuid_src_drive = HDDInfo().msi_gf63_drive.get('uuid')
 
         #: str Path to the root of partition HDD-source: '/cygdrive/d'
         self.__root_pth_src_drive = mnt.get_src_drive(self.__uuid_src_drive)
@@ -28,39 +28,38 @@ class BackupDriveD:
         self.__uuid_recv_drive = self.__disk_data.get('uuid')
 
         #: str: Full path to the root dir of sync on HDD-receiver
-        self.__full_path_dest_dir = self.__root_pth_dest_drive + '/msi_gf63'
+        self.__full_path_dest_dir = self.__root_pth_dest_drive + '/msi_gf63_files'
 
         #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
-        self.__path_logs_dir = log.get_logs_dir('drive_D')
+        self.__path_logs_dir = log.get_logs_dir('backup_msi_gf63')
 
         #: list(str): List of arguments of execution Rsync in dry-run mode
         self.__rsync_test_mode_upl = [
             'rsync',
-            '--recursive',  # copy directories recursively
-            '--perms',  # preserve permissions
-            '--times',  # preserve modification time
-            '--group',  # preserve group
-            '--owner',  # preserve owner (super-user only)
-            '--devices',  # preserve device files (super-user only)
-            '--specials',  # preserve special files
-            '--human-readable',  # output numbers in a human-readable format
-            '--dry-run',  # perform a trial run with no changes made
-            '--stats',  # give some file-transfer stats
-            '--progress',  # show progress during transfer
-            '--del',  # receiver deletes during xfer, not before
-            '--verbose',  # increase verbosity
-            '--copy-links',  # transform symlink into referent file/dir
+            '--recursive',          # copy directories recursively
+            '--perms',              # preserve permissions
+            '--times',              # preserve modification time
+            '--group',              # preserve group
+            '--owner',              # preserve owner (super-user only)
+            '--devices',            # preserve device files (super-user only)
+            '--specials',           # preserve special files
+            '--human-readable',     # output numbers in a human-readable format
+            '--dry-run',            # perform a trial run with no changes made
+            '--stats',              # give some file-transfer stats
+            '--progress',           # show progress during transfer
+            '--del',                # receiver deletes during xfer, not before
+            '--verbose',            # increase verbosity
+            '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
             '--exclude=Hyper-V',
             '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
-            '--exclude=msi_gf63/',
             '--exclude=logs/',
             '--exclude=node_modules/',
-            '',  # path to log file
-            '',  # source
+            '',                     # path to log file
+            '',                     # source
             self.__full_path_dest_dir
         ]
 
@@ -86,7 +85,6 @@ class BackupDriveD:
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
-            '--exclude=msi_gf63/',
             '--exclude=logs/',
             '--exclude=node_modules/',
             '',
@@ -203,7 +201,7 @@ class BackupDriveD:
 
 
 def main():
-    backup = BackupDriveD()
+    backup = BackupMsi()
     backup.prepare_sync_data()
 
 
