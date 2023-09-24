@@ -22,7 +22,7 @@ class HDDInfo:
         }
 
         #: Wester Digital 1Tb (MSI GF63)
-        self.__dell_3576_drive = {
+        self.__msi_gf63_drive = {
             'uuid': '01D937210A0E5460'
         }
 
@@ -41,8 +41,8 @@ class HDDInfo:
         return self.__hitachi_drive
 
     @property
-    def dell_3576_drive(self) -> Dict[str, str]:
-        return self.__dell_3576_drive
+    def msi_gf63_drive(self) -> Dict[str, str]:
+        return self.__msi_gf63_drive
 
     @property
     def jmicron_drive(self) -> Dict[str, str]:
