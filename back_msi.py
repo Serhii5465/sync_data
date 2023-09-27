@@ -1,7 +1,7 @@
 import argparse
 import sys
 from typing import Dict, List
-from src import mnt, upl, log
+from src import mnt, upl, log, date
 from src.hdd_info import HDDInfo
 
 
@@ -41,7 +41,6 @@ class BackupMsi:
             '--times',              # preserve modification time
             '--group',              # preserve group
             '--owner',              # preserve owner (super-user only)
-            '--devices',            # preserve device files (super-user only)
             '--specials',           # preserve special files
             '--human-readable',     # output numbers in a human-readable format
             '--dry-run',            # perform a trial run with no changes made
@@ -52,13 +51,12 @@ class BackupMsi:
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
             '--exclude=Hyper-V',
-            '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=logs/',
             '--exclude=node_modules/',
-            '',                     # path to log file
+            '--log-file=',          # path to log file
             '',                     # source
             self.__full_path_dest_dir
         ]
@@ -71,7 +69,6 @@ class BackupMsi:
             '--times',
             '--group',
             '--owner',
-            '--devices',
             '--specials',
             '--human-readable',
             '--stats',
@@ -81,13 +78,12 @@ class BackupMsi:
             '--copy-links',
             '--out-format="%t %f %''b"',
             '--exclude=Hyper-V',
-            '--exclude=cygwin64/',
             '--exclude=games/',
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=logs/',
             '--exclude=node_modules/',
-            '',
+            '--log-file=',
             '',
             self.__full_path_dest_dir
         ]
@@ -140,6 +136,14 @@ class BackupMsi:
     def list_sync_dirs(self) -> Dict[str, str]:
         return self.__list_sync_dirs
 
+    @rsync_test_mode_upl.setter
+    def rsync_test_mode_upl(self, log) -> None:
+        self.__rsync_test_mode_upl[len(self.__rsync_test_mode_upl) - 3] += log
+
+    @rsync_base_mode_upl.setter
+    def rsync_base_mode_upl(self, log) -> None:
+        self.__rsync_base_mode_upl[len(self.__rsync_base_mode_upl) - 3] += log
+
     def prepare_sync_data(self) -> None:
         """
         Prepares data for synchronization.
@@ -180,19 +184,22 @@ class BackupMsi:
 
         list_full_path_sync_dirs = [self.root_pth_src_drive + '/' + i for i in list_name_dirs]
 
+        path_log_file = self.path_logs_dir + date.time_now() + '_' + self.name_model_recv_drive + '.log'
+
+        self.rsync_test_mode_upl = path_log_file
+        self.rsync_base_mode_upl = path_log_file
+
         dict_rsync_test_md = {
             'command': self.rsync_test_mode_upl,
             'list_full_path_sync_dirs': list_full_path_sync_dirs,
-            'name_model_recv_drive': self.name_model_recv_drive,
-            'path_logs_dir': self.path_logs_dir,
+            'path_log_file': path_log_file,
             'is_dry_run': True
         }
 
         dict_rsync_base_md = {
             'command': self.rsync_base_mode_upl,
             'list_full_path_sync_dirs': list_full_path_sync_dirs,
-            'name_model_recv_drive': self.name_model_recv_drive,
-            'path_logs_dir': self.path_logs_dir,
+            'path_log_file': path_log_file,
             'is_dry_run': False
         }
 
