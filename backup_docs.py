@@ -24,7 +24,7 @@ class BackupDocuments:
         self.check_files(self.__rclone_conf, self.__sync_dir)
 
         #: Path to logs dir.
-        self.__logs_dir = log.get_logs_dir('rclone', add_subfolder=False)
+        self.__logs_dir = log.get_logs_dir('rclone')
 
     @property
     def logs_dir(self) -> str:
@@ -77,10 +77,8 @@ class BackupDocuments:
         win_style_path_sync_dir = bash_process.get_cmd_output(['cygpath', '--windows', self.sync_dir])
         win_style_path_logs_dir = bash_process.get_cmd_output(['cygpath', '--windows', self.logs_dir])
 
-        date_now = date.get_time_now()
-
         command = ['rclone', 'sync', '--progress', '--verbose',
-                    '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date_now + '.log']
+                    '--log-file=' + win_style_path_logs_dir.stdout.strip('\n') + '/' + date.time_now() + '.log']
 
         if args['upload']:
             command.insert(4, win_style_path_sync_dir.stdout.strip('\n'))
