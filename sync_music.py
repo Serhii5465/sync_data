@@ -20,7 +20,7 @@ class SyncMusic:
         self.__root_unix_src_dir = '/cygdrive/d/media/'
         self.__full_path_unix_src_root = self.__root_unix_src_dir + self.__sync_dir
         self.__win_src_dir = bash_process.get_form_out_cmd(['cygpath.exe', '--windows', self.__full_path_unix_src_root])
-        self.__root_dest_dir = '/storage/self/primary/'
+        self.__root_dest_dir = '/storage/3845-88E3/'
 
         self.__logger = self.crt_logger()
 
@@ -222,9 +222,8 @@ class SyncMusic:
         Returns:
             Instance of Logger.
         """
-        create_subfolder = False
-        date_now = date.get_time_now()
-        path_logs_dir = log.get_logs_dir('adb_sync_Redmi-Note-9-Pro', create_subfolder)
+        date_now = date.time_now()
+        path_logs_dir = log.get_logs_dir('adb_sync_Redmi-Note-9-Pro')
         full_path_log_file = path_logs_dir + '/' + date_now + '.log'
 
         log_format = "%(levelname)s %(asctime)s - %(message)s"
