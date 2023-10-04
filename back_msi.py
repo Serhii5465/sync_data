@@ -159,8 +159,6 @@ def main() -> None:
         'is_dry_run': False
     }
 
-    print(dict_rsync_test_md)
-
     upl.upload_files(dict_rsync_test_md)
     upl.upload_files(dict_rsync_base_md)
 
