@@ -1,49 +1,29 @@
 from typing import Dict
 
+#: Wester Digital 1Tb (Maiwo External Enclosure)
+def WD_DRIVE() -> Dict[str, str]:
+    return {
+        'uuid': 'E0D6F7A1D6F7765E',
+        #'uuid': '4EB4A2C6B4A2B03F',
+        'name': 'Wester Digital (Maiwo)'
+    }
 
-class HDDInfo:
-    """
-    Class represents information about HDD: UUID of partition and name model drive.
-    """
-    def __init__(self) -> None:
-        """
-        Initializes dicts with value of UUID and name model of HDD.
-        """
-        #: Wester Digital 1Tb (Maiwo External Enclosure)
-        self.__wd_drive = {
-            'uuid': '4EB4A2C6B4A2B03F',
-            'name': 'Wester Digital (Maiwo)'
-        }
+#: Hitachi 500Gb (Maiwo External Enclosure)
+def HITACHI_DRIVE() -> Dict[str, str]:
+    return {
+        'uuid': '247AE4E87AE4B826',
+        'name': 'Hitachi (Maiwo)'
+    }
 
-        #: Hitachi 500Gb (Maiwo External Enclosure)
-        self.__hitachi_drive = {
-            'uuid': '247AE4E87AE4B826',
-            'name': 'Hitachi (Maiwo)'
-        }
+#: Wester Digital 1Tb (MSI GF63)
+def MSI_GF63_DRIVE() -> Dict[str, str]:
+    return {
+        'uuid': '01D937210A0E5460'
+    }
 
-        #: Wester Digital 1Tb (MSI GF63)
-        self.__msi_gf63_drive = {
-            'uuid': '01D937210A0E5460'
-        }
-
-        #: 2.5″ Western Digital 320Gb (JMicron)
-        self.__jmicron_drive = {
+#: 2.5″ Western Digital 320Gb (JMicron)
+def JMICRON_DRIVE() -> Dict[str, str]:
+    return {
             'uuid': 'CE9A33B69A339A43',
             'name': 'Western Digital (JMicron)'
-        }
-
-    @property
-    def wd_drive(self) -> Dict[str, str]:
-        return self.__wd_drive
-
-    @property
-    def hitachi_drive(self) -> Dict[str, str]:
-        return self.__hitachi_drive
-
-    @property
-    def msi_gf63_drive(self) -> Dict[str, str]:
-        return self.__msi_gf63_drive
-
-    @property
-    def jmicron_drive(self) -> Dict[str, str]:
-        return self.__jmicron_drive
+    }
