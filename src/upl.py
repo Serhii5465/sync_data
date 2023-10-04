@@ -1,6 +1,6 @@
 import sys
 from typing import Dict
-from src import bash_process, date
+from src import bash_process
 
 
 def upload_files(data_sync: Dict[str, any]) -> None:

@@ -1,7 +1,6 @@
 import sys
 from typing import Union, Tuple
-from src import bash_process
-from src.hdd_info import HDDInfo
+from src import bash_process, hdd_info
 
 
 def get_recv_drive() -> Tuple[str, str]:
@@ -12,18 +11,17 @@ def get_recv_drive() -> Tuple[str, str]:
         If none of the disks are mounted, the script terminates. Otherwise, tuple with
         UUID partition and path to the root of partition HDD-receiver in UNIX style.
     """
-    hdd_info = HDDInfo()
 
     uuids = [
-        hdd_info.wd_drive,
-        hdd_info.hitachi_drive,
-        hdd_info.jmicron_drive
+        hdd_info.HITACHI_DRIVE,
+        hdd_info.JMICRON_DRIVE,
+        hdd_info.WD_DRIVE
     ]
 
     for i in uuids:
-        recv = get_mount_point(i.get('uuid'))
+        recv = get_mount_point(i().get('uuid'))
         if recv is not None:
-            return recv, i
+            return recv, i()
 
     if recv is None:
         sys.exit('Receiver-disk is not mounted')
