@@ -13,15 +13,15 @@ def get_recv_drive() -> Tuple[str, str]:
     """
 
     uuids = [
-        hdd_info.HITACHI_DRIVE,
-        hdd_info.JMICRON_DRIVE,
-        hdd_info.WD_DRIVE
+        hdd_info.HITACHI_DRIVE(),
+        hdd_info.JMICRON_DRIVE(),
+        hdd_info.WD_DRIVE()
     ]
 
     for i in uuids:
-        recv = get_mount_point(i().get('uuid'))
+        recv = get_mount_point(i.get('uuid'))
         if recv is not None:
-            return recv, i()
+            return recv, i
 
     if recv is None:
         sys.exit('Receiver-disk is not mounted')
