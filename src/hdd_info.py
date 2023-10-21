@@ -24,7 +24,7 @@ def JMICRON_DRIVE() -> Dict[str, str]:
 #: Wester Digital 1Tb (MSI GF63)
 def MSI_GF63_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '01D937210A0E5460'
+        'uuid': '1EA45183A4515DF9'
     }
 
 def DELL_INSPIRON_DRIVE() -> Dict[str, str]:
