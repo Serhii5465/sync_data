@@ -20,7 +20,7 @@ class SyncMusic:
         self.__root_unix_src_dir = '/cygdrive/d/media/'
         self.__full_path_unix_src_root = self.__root_unix_src_dir + self.__sync_dir
         self.__win_src_dir = bash_process.get_form_out_cmd(['cygpath.exe', '--windows', self.__full_path_unix_src_root])
-        self.__root_dest_dir = '/storage/3845-88E3/'
+        self.__root_dest_dir = '/storage/FB31-85FD/'
 
         self.__logger = self.crt_logger()
 
