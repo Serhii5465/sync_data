@@ -49,8 +49,6 @@ def main() -> None:
             '--verbose',            # increase verbosity
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
-            '--exclude=autohotkey_scripts',
-            '--exclude=services',
             '--exclude=adb',
             '--exclude=cygwin64',
             '--log-file=',          # path to log file
@@ -73,8 +71,6 @@ def main() -> None:
             '--verbose',            # increase verbosity
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
-            '--exclude=autohotkey_scripts',
-            '--exclude=services',
             '--exclude=adb',
             '--exclude=cygwin64',
             '--log-file=',          # path to log file
