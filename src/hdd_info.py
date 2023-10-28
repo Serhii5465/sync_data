@@ -29,5 +29,5 @@ def MSI_GF63_DRIVE() -> Dict[str, str]:
 
 def DELL_INSPIRON_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': 'B882EEE382EEA4DA'
+        'uuid': 'B8F0199BF01960C4'
     }
