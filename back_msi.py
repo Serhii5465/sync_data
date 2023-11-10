@@ -23,7 +23,8 @@ def parse_args(list_dirs: Dict[str, str], id_recv_drive: str, root_pth_src_drive
     list_full_path_sync_dirs = []
     list_name_dirs = []
 
-    if id_recv_drive == hdd_info.JMICRON_DRIVE().get('uuid') and (args['all'] == True or args['folder'] == 'vb' or args['folder'] == 'hv'):
+    # if id_recv_drive == hdd_info.JMICRON_DRIVE().get('uuid') and (args['all'] == True or args['folder'] == 'vb' or args['folder'] == 'hv'):
+    if id_recv_drive == hdd_info.JMICRON_DRIVE().get('uuid') and args['all'] == True:
         print('\nThe directory of virtual machines cannot be copied to the \'Jmicron\' driver due to his insufficient capacity.\n' 
                 'Run the script for this drive with the \'-n\' parameter.')
         sys.exit()
