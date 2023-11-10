@@ -9,10 +9,10 @@ def parse_args(list_dirs: Dict[str, str], id_recv_drive: str, root_pth_src_drive
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
     group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
-    group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronized', 
-                        default=None, 
-                        type=str,
-                        choices=list_dirs.keys())
+    # group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronized', 
+    #                     default=None, 
+    #                     type=str,
+    #                     choices=list_dirs.keys())
 
     args = vars(parser.parse_args())
 
@@ -35,8 +35,8 @@ def parse_args(list_dirs: Dict[str, str], id_recv_drive: str, root_pth_src_drive
         list_name_dirs = list(list_dirs.values())
         del list_name_dirs[len(list_name_dirs) - 2: len(list_name_dirs)]
 
-    elif args['folder']:
-        list_name_dirs.append(list_dirs.get(args['folder']))
+    # elif args['folder']:
+    #     list_name_dirs.append(list_dirs.get(args['folder']))
 
     # Concatenate folder names with root path of the source drive
     list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in list_name_dirs]
@@ -75,7 +75,6 @@ def main() -> None:
             'documents' : 'documents',
             'installers' : 'installers',
             'media' : 'media',
-            'projects' : 'projects',
             'vb' : 'virtual_machines',
             'hv' : 'hyper_v_export_vm'
         }
@@ -102,7 +101,6 @@ def main() -> None:
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=logs/',
-            '--exclude=node_modules/',
             '--log-file=',          # path to log file
             '',                     # source
             full_path_dest_dir
@@ -129,7 +127,6 @@ def main() -> None:
             '--exclude=Snapshots/',
             '--exclude=Logs/',
             '--exclude=logs/',
-            '--exclude=node_modules/',
             '--log-file=',
             '',
             full_path_dest_dir
