@@ -10,7 +10,7 @@ def WD_DRIVE() -> Dict[str, str]:
 #: Hitachi 500Gb (Maiwo External Enclosure)
 def HITACHI_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '247AE4E87AE4B826',
+        'uuid': '969A62AA9A628719',
         'name': 'Hitachi (Maiwo)'
     }
 
@@ -24,7 +24,7 @@ def JMICRON_DRIVE() -> Dict[str, str]:
 #: Wester Digital 1Tb (MSI GF63)
 def MSI_GF63_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '1EA45183A4515DF9'
+        'uuid': '122C7D8D2C7D6D1B'
     }
 
 def DELL_INSPIRON_DRIVE() -> Dict[str, str]:
