@@ -3,7 +3,7 @@ from typing import Dict
 #: Wester Digital 1Tb (Maiwo External Enclosure)
 def WD_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '4EB4A2C6B4A2B03F',
+        'uuid': '647EF4017EF3CA36',
         'name': 'Wester Digital (Maiwo)'
     }
 
