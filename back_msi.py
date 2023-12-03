@@ -77,7 +77,7 @@ def main() -> None:
             'installers' : 'installers',
             'media' : 'media',
             'vb' : 'virtual_machines',
-            'hv' : 'hyper_v_export_vm'
+            # 'hv' : 'hyper_v_export_vm'
         }
     
     #: list(str): List of arguments of execution Rsync in dry-run mode
