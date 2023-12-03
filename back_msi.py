@@ -34,7 +34,7 @@ def parse_args(list_dirs: Dict[str, str], id_recv_drive: str, root_pth_src_drive
 
     elif args['no_vm']:
         list_name_dirs = list(list_dirs.values())
-        del list_name_dirs[len(list_name_dirs) - 2: len(list_name_dirs)]
+        del list_name_dirs[len(list_name_dirs) - 1: len(list_name_dirs)]
 
     # elif args['folder']:
     #     list_name_dirs.append(list_dirs.get(args['folder']))
