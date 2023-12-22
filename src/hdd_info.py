@@ -17,17 +17,12 @@ def HITACHI_DRIVE() -> Dict[str, str]:
 #: 2.5″ Western Digital 320Gb (JMicron)
 def JMICRON_DRIVE() -> Dict[str, str]:
     return {
-            'uuid': 'C8CADB06CADAEFA4',
-            'name': 'Western Digital (JMicron)'
+        'uuid': '708098AE80987BF2',
+        'name': 'Western Digital (JMicron)'
     }
 
 #: Wester Digital 1Tb (MSI GF63)
 def MSI_GF63_DRIVE() -> Dict[str, str]:
     return {
         'uuid': '841EBF531EBF3D4C'
-    }
-
-def DELL_INSPIRON_DRIVE() -> Dict[str, str]:
-    return {
-        'uuid': 'B8F0199BF01960C4'
     }

@@ -12,7 +12,7 @@ def get_logs_dir(dir: str) -> str:
         Full path to log's dir.
     """
 
-    full_path_logs_dir = '/cygdrive/d/logs/' + dir + '/'
+    full_path_logs_dir = '/cygdrive/e/logs/' + dir + '/'
 
     Path(full_path_logs_dir).mkdir(parents=True, exist_ok=True)
 
