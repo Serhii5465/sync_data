@@ -1,9 +1,9 @@
 import argparse
 import sys
 import datetime
-from typing import Dict, List
+from typing import Dict
 from pathlib import Path
-from src import mnt, upl, date, hdd_info
+from src import mnt, upl, hdd_info
 
 def parse_args(dict_sync_dirs: Dict[str, str]) -> Dict[str, any]:
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
