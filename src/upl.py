@@ -1,6 +1,6 @@
 import sys
 from typing import Dict
-from src import bash_process
+from py_exec_cmd import exec_cmd
 
 
 def upload_files(data_sync: Dict[str, any]) -> None:
@@ -37,7 +37,7 @@ def upload_files(data_sync: Dict[str, any]) -> None:
         print('\nStart syncing the ' + '\'' + list_sync_dirs[idx] + '\'' + ' folder\n')
         
         # Start synchronization
-        code = bash_process.run_cmd(command)
+        code = exec_cmd.run_cmd(command)
 
         if code.returncode != 0:
             sys.exit('Error\nCheck logs')

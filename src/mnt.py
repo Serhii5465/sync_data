@@ -1,6 +1,7 @@
 import sys
 from typing import Union, Tuple
-from src import bash_process, hdd_info
+from py_exec_cmd import exec_cmd
+from src import hdd_info
 
 
 def get_recv_drive() -> Tuple[str, str]:
@@ -38,7 +39,7 @@ def get_mount_point(uuid_drive: str) -> Union[None, str]:
         If HDD not mounted, returns None. Otherwise, path to the root of partition HDD in UNIX style.
     """
 
-    name_block_dev = bash_process.get_cmd_output(['blkid', '--uuid', uuid_drive])  # stdout example: /dev/sda1\n
+    name_block_dev = exec_cmd.get_cmd_out(['blkid', '--uuid', uuid_drive])  # stdout example: /dev/sda1\n
 
     """
     Checking if partition is mounted
@@ -55,7 +56,7 @@ def get_mount_point(uuid_drive: str) -> Union[None, str]:
         Finding by using utility Grep the mount point in Windows
         Output: CompletedProcess(args=['grep', '/proc/partitions', '-e', 'sda2'], returncode=0, stdout='    8     2 976744448 sda2   D:\\\n', stderr='')
         """
-        info_partition = bash_process.get_cmd_output(['grep', '/proc/partitions', '-e', name_file_blk_dev])
+        info_partition = exec_cmd.get_cmd_out(['grep', '/proc/partitions', '-e', name_file_blk_dev])
 
         # Output: ['', '', '', '', '8', '', '', '', '', '2', '976744448', 'sda2', '', '', 'D:\\\n']
         list_str = info_partition.stdout.split(' ')
@@ -64,7 +65,7 @@ def get_mount_point(uuid_drive: str) -> Union[None, str]:
         win_mnt_point = list_str[len(list_str) - 1].strip('/\/\n')
 
         # output: CompletedProcess(args=['cygpath', '--unix', 'D:'], returncode=0, stdout='/cygdrive/d\n', stderr='')
-        unix_mnt_point = bash_process.get_form_out_cmd(['cygpath', '--unix', win_mnt_point])
+        unix_mnt_point = exec_cmd.get_bety_cmd_out(['cygpath', '--unix', win_mnt_point])
 
         # example return: /cygdrive/d/
         return unix_mnt_point
