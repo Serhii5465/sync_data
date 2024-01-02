@@ -1,1 +1,1 @@
-This repository is used to store my scripts for synchronization data in UNIX-like environments such as Ubuntu and Cygwin.
+A script to synchronize my files using the rsync utility in a Cygwin environment
