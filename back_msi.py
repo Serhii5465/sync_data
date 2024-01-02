@@ -1,7 +1,9 @@
 import argparse
 import sys
+import datetime
 from typing import Dict, List
-from src import mnt, upl, log, date, hdd_info
+from pathlib import Path
+from src import mnt, upl, date, hdd_info
 
 def parse_args(dict_sync_dirs: Dict[str, str]) -> Dict[str, any]:
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
@@ -41,10 +43,11 @@ def init_mnt_pnt() -> Dict[str, str]:
     full_path_dest_dir = root_pth_dest_drive + '/msi_gf63_files'
 
     #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
-    path_logs_dir = log.get_logs_dir('backup_msi_gf63')
+    path_logs_dir = '/cygdrive/e/logs/backup_msi_gf63/' 
+    Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
 
     #: str: Full name of log file
-    path_log_file = path_logs_dir + date.time_now() + '_' + name_model_recv_drive + '.log'
+    path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + name_model_recv_drive + '.log'
 
     return {
         'root_pth_src_drive' : root_pth_src_drive,
