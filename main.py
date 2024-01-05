@@ -6,11 +6,11 @@ from pathlib import Path
 from src import mnt, upl, hdd_info
 
 def parse_args(dict_sync_dirs: Dict[str, str]) -> Dict[str, any]:
-    parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB HDD')
+    parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB-HDD')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are located in drive D')
-    group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignore directories which are using to store Virtualbox and Hyper-V virtual machines')
-    group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronized', 
+    group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are locating on drive')
+    group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignoring directories which storing images of virtual machines')
+    group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronization', 
                         default=None, 
                         type=str,
                         choices=dict_sync_dirs.keys())
@@ -64,8 +64,7 @@ def main() -> None:
             'documents' : 'documents',
             'installers' : 'installers',
             'media' : 'media',
-            'vb' : 'virtual_machines',
-            # 'hv' : 'hyper_v_export_vm'
+            'vm' : 'virtual_machines'
         }
 
     cli_arg = parse_args(dict_sync_dirs)
