@@ -17,7 +17,7 @@ def HITACHI_DRIVE() -> Dict[str, str]:
 #: 2.5″ Western Digital 320Gb (JMicron)
 def JMICRON_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '708098AE80987BF2',
+        'uuid': 'FE821EBE821E7B7B',
         'name': 'Western Digital (JMicron)'
     }
 
