@@ -3,17 +3,18 @@ import sys
 import datetime
 from typing import Dict
 from pathlib import Path
-from src import mnt, upl, hdd_info
+from src import constants, mnt, upl
 
-def parse_args(dict_sync_dirs: Dict[str, str]) -> Dict[str, any]:
-    parser = argparse.ArgumentParser(description='Synchronization files between local storage and external USB-HDD')
+def parse_args() -> Dict[str, any]:
+    parser = argparse.ArgumentParser(description='Synchronization files between local storage and external HDD')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are locating on drive')
     group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignoring directories which storing images of virtual machines')
     group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronization', 
                         default=None, 
                         type=str,
-                        choices=dict_sync_dirs.keys())
+                        choices=list(constants.MSI_GF63_SRC_DRIVE_1().get('sync_dirs')) + list(constants.MSI_GF63_SRC_DRIVE_2().get('sync_dirs')))
+
 
     args = vars(parser.parse_args())
 
@@ -22,12 +23,17 @@ def parse_args(dict_sync_dirs: Dict[str, str]) -> Dict[str, any]:
     else:
         return args
 
-def init_mnt_pnt() -> Dict[str, str]:
-     #: str: UUID partition of HDD-source
-    uuid_src_drive = hdd_info.MSI_GF63_DRIVE().get('uuid')
+def init_mnt_point() -> Dict[str, str]:
+    #: Dict[str, list[str]]: The disk UUID and a list of synchronized folders: uuid: '8E76883376881DD9', list['dir1', 'dir2']
+    src_drive_1 = constants.MSI_GF63_SRC_DRIVE_1()
+    src_drive_2 = constants.MSI_GF63_SRC_DRIVE_2()
 
-    #: str Path to the root of partition HDD-source: '/cygdrive/e'
-    root_pth_src_drive = mnt.get_src_drive(uuid_src_drive)
+    #: str: The Cygwin-style paths to the source disk: /cygdrive/d/
+    root_pth_src_drive_1 = mnt.get_src_drive(src_drive_1.get('uuid'))
+    root_pth_src_drive_2 = mnt.get_src_drive(src_drive_2.get('uuid'))
+    
+    temp_list_full_path_sync_dirs_1 = [root_pth_src_drive_1 + '/' + i for i in src_drive_1.get('sync_dirs')]
+    temp_list_full_path_sync_dirs_2 = [root_pth_src_drive_2 + '/' + i for i in src_drive_2.get('sync_dirs')]
 
     #: Tuple(str, str): UUID partition and path to the root of partition HDD-receiver:
     #: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
@@ -36,61 +42,37 @@ def init_mnt_pnt() -> Dict[str, str]:
     #: str: Name model of HDD-receiver
     name_model_recv_drive = drive_data.get('name')
 
-    # #: str: UUID of partition HDD-receiver
-    # uuid_recv_drive = drive_data.get('uuid')
-
-    #: str: Full path to the root dir of sync on HDD-receiver
+    #: str: The path to the root folder where backups are stored
     full_path_dest_dir = root_pth_dest_drive + '/msi_gf63_files'
 
     #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
-    path_logs_dir = '/cygdrive/e/logs/backup_msi_gf63/' 
+    path_logs_dir = '/cygdrive/d/logs/backup_msi_gf63/' 
     Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
 
     #: str: Full name of log file
     path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + name_model_recv_drive + '.log'
 
     return {
-        'root_pth_src_drive' : root_pth_src_drive,
+        'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs_1 + temp_list_full_path_sync_dirs_2,
         'full_path_dest_dir' : full_path_dest_dir,
         'path_log_file' : path_log_file
     }
 
 
 def main() -> None:
-    #: dict[str, str] : Dictionary with information of synchronized folders.
-    dict_sync_dirs = {
-            'backups' : 'backups',
-            'configs' : 'configs',
-            'documents' : 'documents',
-            'installers' : 'installers',
-            'media' : 'media',
-            'vm' : 'virtual_machines'
-        }
+    cli_arg = parse_args()
+    mnt_points = init_mnt_point()
 
-    cli_arg = parse_args(dict_sync_dirs)
-    mnt_points = init_mnt_pnt()
-
-    root_pth_src_drive = mnt_points.get('root_pth_src_drive')
+    list_full_path_sync_dirs = mnt_points.get('list_full_path_sync_dirs')
     full_path_dest_dir = mnt_points.get('full_path_dest_dir')
     path_log_file = mnt_points.get('path_log_file')
 
-    #: Creates list of full paths to folders for sync.
-    list_full_path_sync_dirs = []
-    temp_list_name_dirs = []
-
-    if cli_arg['all']:
-        temp_list_name_dirs = list(dict_sync_dirs.values())
-
-    elif cli_arg['no_vm']:
-        temp_list_name_dirs = list(dict_sync_dirs.values())
-        del temp_list_name_dirs[len(temp_list_name_dirs) - 1: len(temp_list_name_dirs)]
-
+    if cli_arg['no_vm']:
+        list_full_path_sync_dirs.pop()
+        
     elif cli_arg['folder']:
-        temp_list_name_dirs.append(dict_sync_dirs.get(cli_arg['folder']))
+        list_full_path_sync_dirs = list(filter(lambda x: cli_arg['folder'] in x, list_full_path_sync_dirs))
 
-    list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in temp_list_name_dirs]
-
-    #: list(str): List of launch options Rsync in dry-run mode
     rsync_test_mode_upl = [
             'rsync',
             '--recursive',          # copy directories recursively
@@ -147,21 +129,22 @@ def main() -> None:
     rsync_test_mode_upl[len(rsync_test_mode_upl) - 3] += path_log_file
     rsync_base_mode_upl[len(rsync_base_mode_upl) - 3] += path_log_file
 
-    dict_rsync_test_md = {
+    dict_rsync_test_mode = {
         'command': rsync_test_mode_upl,
         'list_full_path_sync_dirs': list_full_path_sync_dirs,
         'path_log_file': path_log_file,
         'is_dry_run': True
     }
 
-    dict_rsync_base_md = {
+    dict_rsync_base_mode = {
         'command': rsync_base_mode_upl,
         'list_full_path_sync_dirs': list_full_path_sync_dirs,
         'path_log_file': path_log_file,
         'is_dry_run': False
     }
     
-    upl.upload_files(dict_rsync_test_md)
-    upl.upload_files(dict_rsync_base_md)
+    upl.upload_files(dict_rsync_test_mode)
+    upl.upload_files(dict_rsync_base_mode)
+
 
 main()

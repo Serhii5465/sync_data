@@ -1,7 +1,7 @@
 import sys
 from typing import Union, Tuple
 from py_exec_cmd import exec_cmd
-from src import hdd_info
+from src import constants
 
 
 def get_recv_drive() -> Tuple[str, str]:
@@ -9,14 +9,14 @@ def get_recv_drive() -> Tuple[str, str]:
     Iterates a list with the UUIDs of the receiver disks
     and checks if any of them are mounted.
     Returns:
-        If none of the disks are mounted, the script terminates. Otherwise, tuple with
-        UUID partition and path to the root of partition HDD-receiver in UNIX style.
+        If none of the disks are mounted, the script terminates. Otherwise, 
+        a tuple with the UUID partition and its path in Cygwin format will be created.
     """
 
     uuids = [
-        hdd_info.HITACHI_DRIVE(),
-        hdd_info.JMICRON_DRIVE(),
-        hdd_info.WD_DRIVE()
+        constants.HITACHI_DRIVE(),
+        constants.SEAGATE_DRIVE(),
+        constants.WD_DRIVE()
     ]
 
     for i in uuids:
@@ -30,13 +30,13 @@ def get_recv_drive() -> Tuple[str, str]:
 
 def get_mount_point(uuid_drive: str) -> Union[None, str]:
     """
-    Converts UUID partition to UNIX-format path's mount point.
+    Converts UUID partition to Cygwin format path's mount point.
     If partition not mounted, script will be stops his work.
     Args:
-        uuid_drive: Universal Unique Identifier partition of HDD.
+        uuid_drive: Universal Unique Identifier of partition.
 
     Returns:
-        If HDD not mounted, returns None. Otherwise, path to the root of partition HDD in UNIX style.
+        If HDD not mounted, returns None. Otherwise, path to the partition of HDD receiver.
     """
 
     name_block_dev = exec_cmd.get_cmd_out(['blkid', '--uuid', uuid_drive])  # stdout example: /dev/sda1\n
@@ -78,8 +78,7 @@ def get_src_drive(uuid_drive: str) -> str:
         uuid_drive: Universal Unique Identifier partition of HDD-transmitter.
 
     Returns:
-        If HDD not mounted, script terminates. Otherwise, path 
-        to the root of partition HDD-source in UNIX style.
+    If the hard drive is not mounted, the script terminates. Otherwise, the path to the disk in Cygwin format.
     """
     source = get_mount_point(uuid_drive)
     if source is None:
