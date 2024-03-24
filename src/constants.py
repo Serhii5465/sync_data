@@ -3,21 +3,21 @@ from typing import Dict
 #: Wester Digital 1Tb (Maiwo External Enclosure)
 def WD_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '44A6D12EA6D1216A',
+        'uuid': '94B42285B4226A46',
         'name': 'Wester Digital (Maiwo)'
     }
 
 #: Hitachi 500Gb (Maiwo External Enclosure)
 def HITACHI_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': '6624859F248572BB',
+        'uuid': '56384C06384BE419',
         'name': 'Hitachi (Maiwo)'
     }
 
 #: 2.5″ Seagate Mobile 1Tb (Gembird enclosure)
 def SEAGATE_DRIVE() -> Dict[str, str]:
     return {
-        'uuid': 'A644C20F44C1E1E3',
+        'uuid': '347E0E947E0E4F54',
         'name': 'Seagate Mobile (Gembird)'
     }
 
