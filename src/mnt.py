@@ -14,9 +14,9 @@ def get_recv_drive() -> Tuple[str, str]:
     """
 
     uuids = [
-        constants.HITACHI_DRIVE(),
-        constants.SEAGATE_DRIVE(),
-        constants.WD_DRIVE()
+        constants.EXT_DRIVE_1(),
+        constants.EXT_DRIVE_2(),
+        constants.EXT_DRIVE_3()
     ]
 
     for i in uuids:

@@ -13,7 +13,8 @@ def parse_args() -> Dict[str, any]:
     group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronization', 
                         default=None, 
                         type=str,
-                        choices=list(constants.MSI_GF63_SRC_DRIVE_1().get('sync_dirs')) + list(constants.MSI_GF63_SRC_DRIVE_2().get('sync_dirs')))
+                        # choices=list(constants.MSI_GF63_SRC_DRIVE_1().get('sync_dirs')) + list(constants.MSI_GF63_SRC_DRIVE_2().get('sync_dirs')))
+                        choices=list(constants.MSI_GF63_SRC_DRIVE().get('sync_dirs')))
 
 
     args = vars(parser.parse_args())
@@ -25,15 +26,21 @@ def parse_args() -> Dict[str, any]:
 
 def init_mnt_point() -> Dict[str, str]:
     #: Dict[str, list[str]]: The disk UUID and a list of synchronized folders: uuid: '8E76883376881DD9', list['dir1', 'dir2']
-    src_drive_1 = constants.MSI_GF63_SRC_DRIVE_1()
-    src_drive_2 = constants.MSI_GF63_SRC_DRIVE_2()
+    # src_drive_1 = constants.MSI_GF63_SRC_DRIVE_1()
+    # src_drive_2 = constants.MSI_GF63_SRC_DRIVE_2()
+
+    src_drive = constants.MSI_GF63_SRC_DRIVE()
 
     #: str: The Cygwin-style paths to the source disk: /cygdrive/d/
-    root_pth_src_drive_1 = mnt.get_src_drive(src_drive_1.get('uuid'))
-    root_pth_src_drive_2 = mnt.get_src_drive(src_drive_2.get('uuid'))
-    
-    temp_list_full_path_sync_dirs_1 = [root_pth_src_drive_1 + '/' + i for i in src_drive_1.get('sync_dirs')]
-    temp_list_full_path_sync_dirs_2 = [root_pth_src_drive_2 + '/' + i for i in src_drive_2.get('sync_dirs')]
+    # root_pth_src_drive_1 = mnt.get_src_drive(src_drive_1.get('uuid'))
+    # root_pth_src_drive_2 = mnt.get_src_drive(src_drive_2.get('uuid'))
+
+    root_pth_src_drive = mnt.get_src_drive(src_drive.get('uuid'))
+
+    # temp_list_full_path_sync_dirs_1 = [root_pth_src_drive_1 + '/' + i for i in src_drive_1.get('sync_dirs')]
+    # temp_list_full_path_sync_dirs_2 = [root_pth_src_drive_2 + '/' + i for i in src_drive_2.get('sync_dirs')]
+
+    temp_list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in src_drive.get('sync_dirs')]
 
     #: Tuple(str, str): UUID partition and path to the root of partition HDD-receiver:
     #: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
@@ -53,7 +60,8 @@ def init_mnt_point() -> Dict[str, str]:
     path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + name_model_recv_drive + '.log'
 
     return {
-        'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs_1 + temp_list_full_path_sync_dirs_2,
+        # 'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs_1 + temp_list_full_path_sync_dirs_2,
+        'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
         'path_log_file' : path_log_file
     }
