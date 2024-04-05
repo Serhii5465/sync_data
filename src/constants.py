@@ -17,8 +17,8 @@ def EXT_DRIVE_2() -> Dict[str, str]:
 #: 2.5″ Wester Digital Mobile 320Gb (Gembird enclosure)
 def EXT_DRIVE_3() -> Dict[str, str]:
     return {
-        'uuid': 'AAD0DC96D0DC6A59',
-        'name': 'Seagate Mobile (Gembird)'
+        'uuid': '845A6F615A6F4ECC',
+        'name': 'Wester Digital (Gembird)'
     }
 
 # #: Samsung SSD 500Gb (MSI GF63)
