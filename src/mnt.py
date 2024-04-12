@@ -3,40 +3,15 @@ from typing import Union, Tuple
 from py_exec_cmd import exec_cmd
 from src import constants
 
-
-def get_recv_drive() -> Tuple[str, str]:
-    """
-    Iterates a list with the UUIDs of the receiver disks
-    and checks if any of them are mounted.
-    Returns:
-        If none of the disks are mounted, the script terminates. Otherwise, 
-        a tuple with the UUID partition and its path in Cygwin format will be created.
-    """
-
-    uuids = [
-        constants.EXT_DRIVE_1(),
-        constants.EXT_DRIVE_2(),
-        constants.EXT_DRIVE_3()
-    ]
-
-    for i in uuids:
-        recv = get_mount_point(i.get('uuid'))
-        if recv is not None:
-            return recv, i
-
-    if recv is None:
-        sys.exit('Receiver-disk is not mounted')
-
-
-def get_mount_point(uuid_drive: str) -> Union[None, str]:
+def get_cygwin_mount_point(uuid_drive: str) -> Union[None, str]:
     """
     Converts UUID partition to Cygwin format path's mount point.
-    If partition not mounted, script will be stops his work.
+    If disk not mounted, script will be stops his work.
     Args:
         uuid_drive: Universal Unique Identifier of partition.
 
     Returns:
-        If HDD not mounted, returns None. Otherwise, path to the partition of HDD receiver.
+        If HDD not mounted, returns None. Otherwise, path to the HDD partition.
     """
 
     name_block_dev = exec_cmd.get_cmd_out(['blkid', '--uuid', uuid_drive])  # stdout example: /dev/sda1\n
@@ -70,18 +45,37 @@ def get_mount_point(uuid_drive: str) -> Union[None, str]:
         # example return: /cygdrive/d/
         return unix_mnt_point
 
+def get_mnt_point_src():
+    uuid_src = [
+        constants.DELL_INSPIRON_3576_SRC_DRIVE(),
+        constants.MSI_GF63_SRC_DRIVE()
+    ]
 
-def get_src_drive(uuid_drive: str) -> str:
-    """
-    Checks if source-HDD mounted.
-    Args:
-        uuid_drive: Universal Unique Identifier partition of HDD-transmitter.
+    mnt_point = ''
+    
+    for i in uuid_src:
+        mnt_point = get_cygwin_mount_point(i.get('uuid'))
+        if mnt_point is not None:
+            i['mnt_point'] = mnt_point
+            return i
+    
+    if mnt_point is None:
+        sys.exit('Source HDD did not mount')
 
-    Returns:
-    If the hard drive is not mounted, the script terminates. Otherwise, the path to the disk in Cygwin format.
-    """
-    source = get_mount_point(uuid_drive)
-    if source is None:
-        sys.exit('Source-disk is not mounted')
-    else:
-        return source
+def get_mnt_point_dest():
+    uuid_dest = [
+        constants.EXT_DRIVE_1(),
+        constants.EXT_DRIVE_2(),
+        constants.EXT_DRIVE_3()
+    ]
+
+    mnt_point = ''
+
+    for i in uuid_dest:
+        mnt_point = get_cygwin_mount_point(i.get('uuid'))
+        if mnt_point is not None:
+            i['mnt_point'] = mnt_point
+            return i
+        
+    if mnt_point is None:
+        sys.exit('Receiver HDD did not mount')    
