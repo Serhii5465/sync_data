@@ -21,6 +21,13 @@ def EXT_DRIVE_3() -> Dict[str, str]:
         'label': 'Wester Digital (Gembird)'
     }
 
+#: Test
+# def EXT_DRIVE_3() -> Dict[str, str]:
+#     return {
+#         'uuid': '8A14AA2414AA12ED',
+#         'label': 'Wester Digital (Gembird)'
+#     }
+
 def MSI_GF63_SRC_DRIVE() -> Dict[str, any]:
     return {
         'uuid': '347E0E947E0E4F54',

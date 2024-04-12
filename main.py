@@ -24,26 +24,26 @@ def parse_args() -> Dict[str, any]:
     else:
         return args
 
-def init_presets() -> Dict[str, str]:
+def init_presets() -> Dict[str, any]:
     dict_src = mnt.get_mnt_point_src()
-
-    temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + '/' + i for i in dict_src.get('sync_dirs')]
-
     dict_dest = mnt.get_mnt_point_dest()
 
+    # Example output: ['/cygdrive/d/configs', '/cygdrive/d/vm']
+    temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + '/' + i for i in dict_src.get('sync_dirs')]
+
+    # /cygdrive/e/msi_gf63_files
     full_path_dest_dir = dict_dest.get('mnt_point') + '/' + dict_src.get('name_dest_dir')
 
-    path_logs_dir = '/cygdrive/d/logs/' + dict_src.get('log_name') + '/'
+    path_logs_dir = '/cygdrive/d/logs/' + dict_src.get('log_name')
     Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
 
-    path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + dict_dest.get('label') + '.log'
-
+    path_log_file = path_logs_dir + '/' + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + dict_dest.get('label') + '.log'
+    
     return {
         'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
         'path_log_file' : path_log_file
     }
-
 
 def main() -> None:
     cli_arg = parse_args()
@@ -54,7 +54,9 @@ def main() -> None:
     path_log_file = dict_presets.get('path_log_file')
 
     if cli_arg['no_vm']:
-        list_full_path_sync_dirs.pop()
+        for i in list_full_path_sync_dirs:
+            if 'vm' in i:
+                list_full_path_sync_dirs.remove(i)
         
     elif cli_arg['folder']:
         list_full_path_sync_dirs = list(filter(lambda x: cli_arg['folder'] in x, list_full_path_sync_dirs))

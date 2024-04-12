@@ -8,7 +8,7 @@ def get_cygwin_mount_point(uuid_drive: str) -> Union[None, str]:
     Converts UUID partition to Cygwin format path's mount point.
     If disk not mounted, script will be stops his work.
     Args:
-        uuid_drive: Universal Unique Identifier of partition.
+        uuid_drive: Universal Unique Identifier of HDD partition.
 
     Returns:
         If HDD not mounted, returns None. Otherwise, path to the HDD partition.
@@ -45,7 +45,20 @@ def get_cygwin_mount_point(uuid_drive: str) -> Union[None, str]:
         # example return: /cygdrive/d/
         return unix_mnt_point
 
-def get_mnt_point_src():
+def get_mnt_point_src() -> Union[dict, None]:
+    """
+    Get the mount point of the source drive based on its UUID.
+
+    This function iterates through a list of source drive UUIDs and retrieves their corresponding mount points.
+    If a mount point is found for a UUID, the function returns a dictionary containing the UUID and its mount point.
+    Otherwise, the function stops the program with an error message.
+
+    Returns:
+        dict: A dictionary containing the UUID and its mount point if found.
+
+    Raises:
+        SystemExit
+    """
     uuid_src = [
         constants.DELL_INSPIRON_3576_SRC_DRIVE(),
         constants.MSI_GF63_SRC_DRIVE()
@@ -62,7 +75,7 @@ def get_mnt_point_src():
     if mnt_point is None:
         sys.exit('Source HDD did not mount')
 
-def get_mnt_point_dest():
+def get_mnt_point_dest() -> Union[dict, None]:
     uuid_dest = [
         constants.EXT_DRIVE_1(),
         constants.EXT_DRIVE_2(),
