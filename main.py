@@ -24,43 +24,21 @@ def parse_args() -> Dict[str, any]:
     else:
         return args
 
-def init_mnt_point() -> Dict[str, str]:
-    #: Dict[str, list[str]]: The disk UUID and a list of synchronized folders: uuid: '8E76883376881DD9', list['dir1', 'dir2']
-    # src_drive_1 = constants.MSI_GF63_SRC_DRIVE_1()
-    # src_drive_2 = constants.MSI_GF63_SRC_DRIVE_2()
+def init_presets() -> Dict[str, str]:
+    dict_src = mnt.get_mnt_point_src()
 
-    src_drive = constants.MSI_GF63_SRC_DRIVE()
+    temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + '/' + i for i in dict_src.get('sync_dirs')]
 
-    #: str: The Cygwin-style paths to the source disk: /cygdrive/d/
-    # root_pth_src_drive_1 = mnt.get_src_drive(src_drive_1.get('uuid'))
-    # root_pth_src_drive_2 = mnt.get_src_drive(src_drive_2.get('uuid'))
+    dict_dest = mnt.get_mnt_point_dest()
 
-    root_pth_src_drive = mnt.get_src_drive(src_drive.get('uuid'))
+    full_path_dest_dir = dict_dest.get('mnt_point') + '/' + dict_src.get('name_dest_dir')
 
-    # temp_list_full_path_sync_dirs_1 = [root_pth_src_drive_1 + '/' + i for i in src_drive_1.get('sync_dirs')]
-    # temp_list_full_path_sync_dirs_2 = [root_pth_src_drive_2 + '/' + i for i in src_drive_2.get('sync_dirs')]
-
-    temp_list_full_path_sync_dirs = [root_pth_src_drive + '/' + i for i in src_drive.get('sync_dirs')]
-
-    #: Tuple(str, str): UUID partition and path to the root of partition HDD-receiver:
-    #: root_pth_dest_drive: '/cygdrive/f', disk_data: {name: 'Hitachi', uuid: 'FI4353BNBUHD43' }
-    root_pth_dest_drive, drive_data = mnt.get_recv_drive()
-
-    #: str: Name model of HDD-receiver
-    name_model_recv_drive = drive_data.get('name')
-
-    #: str: The path to the root folder where backups are stored
-    full_path_dest_dir = root_pth_dest_drive + '/msi_gf63_files'
-
-    #: str: Path to the log's dir: '/cygdrive/d/logs/drive_D'
-    path_logs_dir = '/cygdrive/d/logs/backup_msi_gf63/' 
+    path_logs_dir = '/cygdrive/d/logs/' + dict_src.get('log_name') + '/'
     Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
 
-    #: str: Full name of log file
-    path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + name_model_recv_drive + '.log'
+    path_log_file = path_logs_dir + datetime.datetime.now().strftime("%Y-%m-%d_%H\uA789%M\uA789%S") + '_' + dict_dest.get('label') + '.log'
 
     return {
-        # 'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs_1 + temp_list_full_path_sync_dirs_2,
         'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
         'path_log_file' : path_log_file
@@ -69,11 +47,11 @@ def init_mnt_point() -> Dict[str, str]:
 
 def main() -> None:
     cli_arg = parse_args()
-    mnt_points = init_mnt_point()
+    dict_presets = init_presets()
 
-    list_full_path_sync_dirs = mnt_points.get('list_full_path_sync_dirs')
-    full_path_dest_dir = mnt_points.get('full_path_dest_dir')
-    path_log_file = mnt_points.get('path_log_file')
+    list_full_path_sync_dirs = dict_presets.get('list_full_path_sync_dirs')
+    full_path_dest_dir = dict_presets.get('full_path_dest_dir')
+    path_log_file = dict_presets.get('path_log_file')
 
     if cli_arg['no_vm']:
         list_full_path_sync_dirs.pop()
