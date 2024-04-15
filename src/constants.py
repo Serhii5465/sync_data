@@ -24,7 +24,7 @@ def EXT_DRIVE_3() -> Dict[str, str]:
 #: Test
 # def EXT_DRIVE_3() -> Dict[str, str]:
 #     return {
-#         'uuid': '8A14AA2414AA12ED',
+#         'uuid': 'BA6AE7766AE72DB7',
 #         'label': 'Wester Digital (Gembird)'
 #     }
 

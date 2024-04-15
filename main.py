@@ -32,7 +32,7 @@ def init_presets() -> Dict[str, any]:
     temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + '/' + i for i in dict_src.get('sync_dirs')]
 
     # /cygdrive/e/msi_gf63_files
-    full_path_dest_dir = dict_dest.get('mnt_point') + '/' + dict_src.get('name_dest_dir')
+    full_path_dest_dir = dict_dest.get('mnt_point') + dict_src.get('name_dest_dir')
 
     path_logs_dir = '/cygdrive/d/logs/' + dict_src.get('log_name')
     Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
