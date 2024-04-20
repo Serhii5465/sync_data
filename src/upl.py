@@ -1,7 +1,6 @@
 import sys
+import subprocess
 from typing import Dict
-from src import proc
-
 
 def upload_files(data_sync: Dict[str, any]) -> None:
     """
@@ -37,7 +36,7 @@ def upload_files(data_sync: Dict[str, any]) -> None:
         print('\nStart syncing the ' + '\'' + list_sync_dirs[idx] + '\'' + ' folder\n')
         
         # Start synchronization
-        code = proc.run_cmd(command)
+        out = subprocess.run(command, stderr=sys.stderr, stdout=sys.stdout)
 
-        if code.returncode != 0:
+        if out.returncode != 0:
             sys.exit('Error\nCheck logs')
