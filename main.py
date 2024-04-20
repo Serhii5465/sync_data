@@ -3,17 +3,19 @@ import sys
 import datetime
 from typing import Dict
 from pathlib import Path
-from src import constants, mnt, upl
+from src import mnt, upl
 
 def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external HDD')
     group = parser.add_mutually_exclusive_group()
+
+    if '347E0E947E0E4F54' in dict_src.get('uuid'):
+        group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignoring directories which storing images of virtual machines')
+
     group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are locating on drive')
-    group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignoring directories which storing images of virtual machines')
     group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronization', 
                         default=None, 
                         type=str,
-                        # choices=list(constants.MSI_GF63_SRC_DRIVE_1().get('sync_dirs')) + list(constants.MSI_GF63_SRC_DRIVE_2().get('sync_dirs')))
                         choices=list(dict_src.get('sync_dirs')))
     
     args = vars(parser.parse_args())
@@ -27,7 +29,7 @@ def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     dict_dest = mnt.get_mnt_point_dest()
 
     # Example output: ['/cygdrive/d/configs', '/cygdrive/d/vm']
-    temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + '/' + i for i in dict_src.get('sync_dirs')]
+    temp_list_full_path_sync_dirs = [dict_src.get('mnt_point') + i for i in dict_src.get('sync_dirs')]
 
     # /cygdrive/e/msi_gf63_files
     full_path_dest_dir = dict_dest.get('mnt_point') + dict_src.get('name_dest_dir')
@@ -46,20 +48,21 @@ def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
 def main() -> None:
     dict_src = mnt.get_mnt_point_src()
     
-    cli_arg = parse_args(dict_src)
+    args = parse_args(dict_src)
     dict_presets = init_presets(dict_src)
 
     list_full_path_sync_dirs = dict_presets.get('list_full_path_sync_dirs')
     full_path_dest_dir = dict_presets.get('full_path_dest_dir')
     path_log_file = dict_presets.get('path_log_file')
 
-    if cli_arg['no_vm']:
-        for i in list_full_path_sync_dirs:
-            if 'vm' in i:
-                list_full_path_sync_dirs.remove(i)
-        
-    elif cli_arg['folder']:
-        list_full_path_sync_dirs = list(filter(lambda x: cli_arg['folder'] in x, list_full_path_sync_dirs))
+    if 'no_vm' in args:
+        if args['no_vm'] is True:
+            for i in list_full_path_sync_dirs:
+                if 'vm' in i:
+                    list_full_path_sync_dirs.remove(i)
+
+    elif args['folder']:
+        list_full_path_sync_dirs = list(filter(lambda x: args['folder'] in x, list_full_path_sync_dirs))
 
     rsync_test_mode_upl = [
             'rsync',
