@@ -5,7 +5,7 @@ from typing import Dict
 from pathlib import Path
 from src import constants, mnt, upl
 
-def parse_args() -> Dict[str, any]:
+def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external HDD')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are locating on drive')
@@ -14,9 +14,8 @@ def parse_args() -> Dict[str, any]:
                         default=None, 
                         type=str,
                         # choices=list(constants.MSI_GF63_SRC_DRIVE_1().get('sync_dirs')) + list(constants.MSI_GF63_SRC_DRIVE_2().get('sync_dirs')))
-                        choices=list(constants.MSI_GF63_SRC_DRIVE().get('sync_dirs')))
-
-
+                        choices=list(dict_src.get('sync_dirs')))
+    
     args = vars(parser.parse_args())
 
     if len(sys.argv) == 1:
@@ -24,8 +23,7 @@ def parse_args() -> Dict[str, any]:
     else:
         return args
 
-def init_presets() -> Dict[str, any]:
-    dict_src = mnt.get_mnt_point_src()
+def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     dict_dest = mnt.get_mnt_point_dest()
 
     # Example output: ['/cygdrive/d/configs', '/cygdrive/d/vm']
@@ -46,8 +44,10 @@ def init_presets() -> Dict[str, any]:
     }
 
 def main() -> None:
-    cli_arg = parse_args()
-    dict_presets = init_presets()
+    dict_src = mnt.get_mnt_point_src()
+    
+    cli_arg = parse_args(dict_src)
+    dict_presets = init_presets(dict_src)
 
     list_full_path_sync_dirs = dict_presets.get('list_full_path_sync_dirs')
     full_path_dest_dir = dict_presets.get('full_path_dest_dir')
