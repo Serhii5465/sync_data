@@ -44,7 +44,7 @@ pipeline{
                 poll: false, 
                 url: 'git@github.com:Serhii5465/sync_data.git'
 
-                stash includes: '*.py', name: 'src'
+                stash includes: '**/*.py', name: 'src'
             }
         }
 
@@ -54,7 +54,7 @@ pipeline{
             }
             steps {
                 unstash 'src'
-                bat returnStatus: true, script: 'Robocopy.exe . D:\\system\\applications\\cygwin64\\home\\raisnet\\scripts\\sync_data'
+                bat returnStatus: true, script: 'Robocopy.exe /E /copyall . D:\\system\\applications\\cygwin64\\home\\raisnet\\scripts\\sync_data'
             }
         }
     }
