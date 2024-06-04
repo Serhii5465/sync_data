@@ -6,7 +6,8 @@ pipeline{
     }
     
     options { 
-        skipDefaultCheckout() 
+        skipDefaultCheckout()
+        timestamps()
     }
 
     parameters {
