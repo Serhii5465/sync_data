@@ -31,7 +31,7 @@ def EXT_DRIVE_3() -> Dict[str, str]:
 def MSI_GF63_SRC_DRIVE() -> Dict[str, any]:
     return {
         'uuid': '347E0E947E0E4F54',
-        'sync_dirs': ['shared', 'configs' , 'documents', 'media', 'backups', 'installers', 'vm'],
+        'sync_dirs': ['shared', 'local' , 'gdrive_share', 'media', 'backups', 'installers', 'vm'],
         'log_name' : 'backup_msi_gf63',
         'name_dest_dir' : 'msi_gf63_files'
     }
@@ -39,7 +39,7 @@ def MSI_GF63_SRC_DRIVE() -> Dict[str, any]:
 def DELL_INSPIRON_3576_SRC_DRIVE() -> Dict[str, any]:
     return {
         'uuid': '345837F85837B806',
-        'sync_dirs': ['configs' , 'backups'],
+        'sync_dirs': ['local' , 'backups', 'gdrive_share'],
         'log_name' : 'backup_dell_inspiron_3576',
         'name_dest_dir' : 'dell_inspiron_3576_files'
     }
