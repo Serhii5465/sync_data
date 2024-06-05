@@ -21,8 +21,7 @@ pipeline{
         }
 
         stage('Git checkout'){
-            steps {
-                git branch: 'main', 
+            steps{
                 checkout scmGit(branches: [[name: 'main']],
                 extensions: [], 
                 userRemoteConfigs: [[url: 'sync_data_repo:Serhii5465/sync_data.git']])
