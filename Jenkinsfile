@@ -10,7 +10,7 @@ pipeline{
     }
 
     parameters {
-        choice choices: ['Win10_MSI', 'Win10-Dell'], description: 'Choose an agent for deployment', name: 'AGENT'
+        choice choices: ['MSI-LAN_Win10', 'Dell-LAN_Win10', 'MSI-Host_Win10', 'Dell-Host_Win10'], description: 'Choose an agent for deployment', name: 'AGENT'
     }
 
     stages {
