@@ -1,43 +1,7 @@
-@Library('PrepEnvForBuild') _
+@Library(['PrepEnvForBuild', 'DeployWinAgents']) _
 
-pipeline{
-    agent {
-        label 'master'
-    }
-    
-    options { 
-        skipDefaultCheckout()
-    }
-
-    parameters {
-        choice choices: ['MSI-LAN_Win10', 'Dell-LAN_Win10', 'MSI-Host_Win10', 'Dell-Host_Win10'], description: 'Choose an agent for deployment', name: 'AGENT'
-    }
-
-    stages {
-        stage('Check status agent'){
-            steps{
-                CheckAgent("${params.AGENT}")
-            }
-        }
-
-        stage('Git checkout'){
-            steps{
-                checkout scmGit(branches: [[name: 'main']],
-                extensions: [], 
-                userRemoteConfigs: [[url: 'sync_data_repo:Serhii5465/sync_data.git']])
-
-                stash includes: '**/*.py', name: 'src'
-            }
-        }
-
-        stage ('Deploy'){
-            agent {
-                label "${params.AGENT}"
-            }
-            steps {
-                unstash 'src'
-                bat returnStatus: true, script: 'Robocopy.exe /E /copyall . D:\\system\\applications\\cygwin64\\home\\raisnet\\scripts\\sync_data'
-            }
-        }
-    }
+node('master') {
+    def raw = libraryResource 'configs/sync_data_repo.json'
+    def config = readJSON text: raw
+    DeployArtifactsPipelineWinAgents(config)
 }
