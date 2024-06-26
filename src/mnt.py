@@ -1,52 +1,42 @@
 import sys
-from typing import Union
-from cyg_mnt_point import mnt 
+import wmi
+import subprocess
+from typing import List, Dict
 from src import constants
 
-def get_mnt_point_src() -> Union[dict, None]:
-    """
-    Get the mount point of the source drive based on its UUID.
+def conv_path_win_to_unix(windows_path: str) -> str:
+    s = subprocess.run(['cygpath', '--unix', windows_path], capture_output=True, text=True)
+    return s.stdout.strip('\n')
 
-    This function iterates through a list of source drive UUIDs and retrieves their corresponding mount points.
-    If a mount point is found for a UUID, the function returns a dictionary containing the UUID and its mount point.
-    Otherwise, the function stops the program with an error message.
-
-    Returns:
-        dict: A dictionary containing the UUID and its mount point if found.
-
-    Raises:
-        SystemExit
-    """
-    uuid_src = [
-        constants.DELL_INSPIRON_3576_SRC_DRIVE(),
-        constants.MSI_GF63_SRC_DRIVE()
-    ]
-
-    mnt_point = ''
-    
-    for i in uuid_src:
-        mnt_point = mnt.get_cygwin_mount_point(i.get('uuid'))
-        if mnt_point is not None:
-            i['mnt_point'] = mnt_point
-            return i
-    
-    if mnt_point is None:
-        sys.exit('Source HDD did not mount')
-
-def get_mnt_point_dest() -> Union[dict, None]:
-    uuid_dest = [
-        constants.EXT_DRIVE_1(),
-        constants.EXT_DRIVE_2(),
-        constants.EXT_DRIVE_3()
-    ]
-
-    mnt_point = ''
-
-    for i in uuid_dest:
-        mnt_point = mnt.get_cygwin_mount_point(i.get('uuid'))
-        if mnt_point is not None:
-            i['mnt_point'] = mnt_point
-            return i
+def get_mnt_point(list_uuids: List[str]) -> Dict[str, any]:
+    try:
+        c = wmi.WMI()
         
-    if mnt_point is None:
-        sys.exit('Receiver HDD did not mount')    
+        for i in c.Win32_LogicalDisk():
+            for j in list_uuids:
+                if i.VolumeSerialNumber and i.VolumeSerialNumber.strip() == j.get('uuid'):
+                    j['win_mnt_point'] = i.DeviceID + '\\'
+                    j['unix_mnt_point'] = conv_path_win_to_unix(i.DeviceID + '\\')
+                    return j
+        
+        sys.exit("UUID not found")
+
+    except Exception as e:
+        sys.exit(f"An error occurred: {e}")
+
+def get_src_drive() -> Dict[str, any]:
+    uuid_src = [
+        constants.DELL_INSPIRON_3576_SRC_DRIVE,
+        constants.MSI_GF63_SRC_DRIVE
+    ]
+
+    return get_mnt_point(uuid_src)
+
+def get_mnt_point_dest() -> Dict[str, any]:
+    uuid_dest = [
+        constants.EXT_DRIVE_1,
+        constants.EXT_DRIVE_2,
+        constants.EXT_DRIVE_3
+    ]
+
+    return get_mnt_point(uuid_dest)
