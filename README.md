@@ -1,1 +1,1 @@
-A script to synchronize my files using the rsync utility in a Cygwin environment
+File synchronization with external HDD using rsync (MSYS2 package)
