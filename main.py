@@ -1,6 +1,8 @@
 import argparse
 import sys
 import datetime
+import posixpath
+import os
 from typing import Dict
 from pathlib import Path
 from src import mnt, upl
@@ -27,18 +29,17 @@ def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
 
 def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     dict_dest = mnt.get_mnt_point_dest()
-
-    # Example output: [/d/configs', '/d/vm']
-    temp_list_full_path_sync_dirs = [dict_src.get('unix_mnt_point') + i for i in dict_src.get('sync_dirs')]
+    
+    # output: [/d/configs', '/d/vm']
+    temp_list_full_path_sync_dirs = [posixpath.join(dict_src.get('unix_mnt_point'), i) for i in dict_src.get('sync_dirs')]
 
     # /e/msi_gf63_files
-    full_path_dest_dir = dict_dest.get('unix_mnt_point') + dict_src.get('name_dest_dir')
+    full_path_dest_dir = posixpath.join(dict_dest.get('unix_mnt_point'), dict_src.get('name_dest_dir'))
 
-    path_logs_dir = dict_src.get('win_mnt_point') + 'logs/' + dict_src.get('log_name')
+    path_logs_dir = os.path.join(dict_src.get('win_mnt_point'), 'logs', dict_src.get('log_name'))
     Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
+    path_log_file = os.path.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '.log')
 
-    path_log_file = path_logs_dir + '/' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '.log'
-    
     return {
         'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
