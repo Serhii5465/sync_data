@@ -2,9 +2,8 @@ import argparse
 import sys
 import datetime
 import posixpath
-import os
+import subprocess
 from typing import Dict
-from pathlib import Path
 from src import mnt, upl
 
 def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
@@ -31,19 +30,25 @@ def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     dict_dest = mnt.get_mnt_point_dest()
     
     # output: [/d/configs', '/d/vm']
-    temp_list_full_path_sync_dirs = [posixpath.join(dict_src.get('unix_mnt_point'), i) for i in dict_src.get('sync_dirs')]
+    temp_list_full_path_sync_dirs = [posixpath.join(dict_src.get('mnt_point'), i) for i in dict_src.get('sync_dirs')]
 
     # /e/msi_gf63_files
-    full_path_dest_dir = posixpath.join(dict_dest.get('unix_mnt_point'), dict_src.get('name_dest_dir'))
+    full_path_dest_dir = posixpath.join(dict_dest.get('mnt_point'), dict_src.get('name_dest_dir'))
 
-    path_logs_dir = os.path.join(dict_src.get('win_mnt_point'), 'logs', dict_src.get('log_name'))
-    Path(path_logs_dir).mkdir(parents=True, exist_ok=True)
-    path_log_file = os.path.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '.log')
+    print(full_path_dest_dir)
+    print(temp_list_full_path_sync_dirs)
+
+    path_logs_dir = posixpath.join(dict_src.get('mnt_point'), 'logs', dict_src.get('log_name'))
+    subprocess.run(['mkdir', '-p', path_logs_dir], stderr=sys.stderr, stdout=sys.stdout)
+
+    path_log_file_dry_run = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_DRY_RUN.log')
+    path_log_file_upload = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_UPLOAD.log')
 
     return {
         'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
-        'path_log_file' : path_log_file
+        'path_log_file_dry_run' : path_log_file_dry_run,
+        'path_log_file_upload' : path_log_file_upload
     }
 
 def main() -> None:
@@ -54,7 +59,8 @@ def main() -> None:
 
     list_full_path_sync_dirs = dict_presets.get('list_full_path_sync_dirs')
     full_path_dest_dir = dict_presets.get('full_path_dest_dir')
-    path_log_file = dict_presets.get('path_log_file')
+    path_log_file_dry_run = dict_presets.get('path_log_file_dry_run')
+    path_log_file_upload = dict_presets.get('path_log_file_upload')
 
     if args['no_vm'] is True:
         print('no_vm in args')
@@ -116,21 +122,17 @@ def main() -> None:
         ]
     
     # Appending path to log file to rsync's arguments
-    rsync_test_mode_upl[len(rsync_test_mode_upl) - 3] += path_log_file
-    rsync_base_mode_upl[len(rsync_base_mode_upl) - 3] += path_log_file
+    rsync_test_mode_upl[len(rsync_test_mode_upl) - 3] += path_log_file_dry_run
+    rsync_base_mode_upl[len(rsync_base_mode_upl) - 3] += path_log_file_upload
 
     dict_rsync_test_mode = {
         'command': rsync_test_mode_upl,
         'list_full_path_sync_dirs': list_full_path_sync_dirs,
-        'path_log_file': path_log_file,
-        'is_dry_run': True
     }
 
     dict_rsync_base_mode = {
         'command': rsync_base_mode_upl,
-        'list_full_path_sync_dirs': list_full_path_sync_dirs,
-        'path_log_file': path_log_file,
-        'is_dry_run': False
+        'list_full_path_sync_dirs': list_full_path_sync_dirs
     }
     
     upl.upload_files(dict_rsync_test_mode)

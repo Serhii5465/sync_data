@@ -15,19 +15,6 @@ def upload_files(data_sync: Dict[str, any]) -> None:
     """
     command = data_sync.get('command')
     list_sync_dirs = data_sync.get('list_full_path_sync_dirs')
-    path_log_file = data_sync.get('path_log_file')
-    is_test_mode = data_sync.get('is_dry_run')
-
-    f = None
-
-    if is_test_mode == True:
-        f = open(path_log_file, 'w')
-        f.write("TEST MODE\n")
-    else:
-        f = open(path_log_file, 'a')
-        f.write("\n\nUPLOADING MODE\n")
-    
-    f.close()
 
     for idx, val in enumerate(list_sync_dirs):
         # Setting argument of source sync. folder

@@ -15,8 +15,7 @@ def get_mnt_point(list_uuids: List[str]) -> Dict[str, any]:
         for i in c.Win32_LogicalDisk():
             for j in list_uuids:
                 if i.VolumeSerialNumber and i.VolumeSerialNumber.strip() == j.get('uuid'):
-                    j['win_mnt_point'] = i.DeviceID
-                    j['unix_mnt_point'] = conv_path_win_to_unix(j['win_mnt_point'])
+                    j['mnt_point'] = conv_path_win_to_unix(i.DeviceID)
                     return j
         
         sys.exit("UUID not found")
