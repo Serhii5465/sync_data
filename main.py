@@ -35,9 +35,6 @@ def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     # /e/msi_gf63_files
     full_path_dest_dir = posixpath.join(dict_dest.get('mnt_point'), dict_src.get('name_dest_dir'))
 
-    print(full_path_dest_dir)
-    print(temp_list_full_path_sync_dirs)
-
     path_logs_dir = posixpath.join(dict_src.get('mnt_point'), 'logs', dict_src.get('log_name'))
     subprocess.run(['mkdir', '-p', path_logs_dir], stderr=sys.stderr, stdout=sys.stdout)
 
@@ -63,7 +60,6 @@ def main() -> None:
     path_log_file_upload = dict_presets.get('path_log_file_upload')
 
     if args['no_vm'] is True:
-        print('no_vm in args')
         list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if 'vm' not in item]
 
     if args['folder']:
