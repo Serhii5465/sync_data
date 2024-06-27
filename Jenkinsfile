@@ -6,7 +6,7 @@ node('master') {
         git_branch : "main",
         stash_includes : "**/*.py",
         stash_excludes : "",
-        command : "robocopy /E /copyall . D:\\system\\applications\\cygwin64\\home\\raisnet\\scripts\\sync_data"
+        command : "robocopy /E /copyall . D:\\system\\scripts\\sync_data"
     ]
 
     DeployArtifactsPipelineWinAgents(config)
