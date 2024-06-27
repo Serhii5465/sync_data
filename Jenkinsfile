@@ -6,7 +6,7 @@ node('master') {
         git_branch : "main",
         stash_includes : "**/*.py",
         stash_excludes : "",
-        command : "robocopy /E /copyall . D:\\system\\scripts\\sync_data"
+        command : "robocopy /E . D:\\system\\scripts\\sync_data"
     ]
 
     DeployArtifactsPipelineWinAgents(config)
