@@ -80,10 +80,10 @@ def main() -> None:
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
             '--exclude=Hyper-V',
-            '--exclude=games/',
-            '--exclude=Snapshots/',
-            '--exclude=Logs/',
-            '--exclude=logs/',
+            '--exclude=games',
+            '--exclude=Snapshots',
+            '--exclude=Logs',
+            '--exclude=logs',
             '--log-file=',          # path to log file
             '',                     # source
             full_path_dest_dir
@@ -106,10 +106,10 @@ def main() -> None:
             '--copy-links',
             '--out-format="%t %f %''b"',
             '--exclude=Hyper-V',
-            '--exclude=games/',
-            '--exclude=Snapshots/',
-            '--exclude=Logs/',
-            '--exclude=logs/',
+            '--exclude=games',
+            '--exclude=Snapshots',
+            '--exclude=Logs',
+            '--exclude=logs',
             '--log-file=',
             '',
             full_path_dest_dir
