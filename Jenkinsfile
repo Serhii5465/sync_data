@@ -2,8 +2,9 @@
 
 node('master') {
     def config = [
-        git_repo_url : "sync_data_repo:Serhii5465/sync_data.git",
+        git_repo_url : "git@github.com:Serhii5465/sync_data.git",
         git_branch : "main",
+        git_cred_id : "sync_data_repo_cred",
         stash_includes : "**/*.py",
         stash_excludes : "",
         command_deploy : "robocopy /E . D:\\system\\scripts\\sync_data",
