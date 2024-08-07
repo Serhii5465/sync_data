@@ -2,7 +2,7 @@
 
 node('master') {
     def config = [
-        platform: "linux",
+        platform: "win32",
         git_repo_url : "git@github.com:Serhii5465/sync_data.git",
         git_branch : "main",
         git_cred_id : "sync_data_repo_cred",
