@@ -21,7 +21,7 @@ def get_mnt_point(list_uuids: List[str]) -> Dict[str, any]:
         sys.exit("UUID not found")
 
     except Exception as e:
-        sys.exit(f"An error occurred: {e}")
+        sys.exit(f'An error occurred: {e}')
 
 def get_src_drive() -> Dict[str, any]:
     uuid_src = [

@@ -86,6 +86,7 @@ def main() -> None:
             '--exclude=Snapshots',
             '--exclude=Logs',
             '--exclude=logs',
+            '--exclude=WIn10_test_app',
             '--log-file=',          # path to log file
             '',                     # source
             full_path_dest_dir
@@ -113,6 +114,7 @@ def main() -> None:
             '--exclude=Logs',
             '--exclude=logs',
             '--log-file=',
+            '--exclude=WIn10_test_app',
             '',
             full_path_dest_dir
         ]
@@ -134,4 +136,5 @@ def main() -> None:
     upl.upload_files(dict_rsync_test_mode)
     upl.upload_files(dict_rsync_base_mode)
 
-main()
+if __name__ == "__main__":
+    main()

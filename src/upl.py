@@ -20,7 +20,7 @@ def upload_files(data_sync: Dict[str, any]) -> None:
         # Setting argument of source sync. folder
         command[len(command) - 2] = val
 
-        print('\nStart syncing the ' + '\'' + list_sync_dirs[idx] + '\'' + ' folder\n')
+        print(f'\nStart syncing the \'{list_sync_dirs[idx]}\' folder\n')
         
         # Start synchronization
         out = subprocess.run(command, stderr=sys.stderr, stdout=sys.stdout)
