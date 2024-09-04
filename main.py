@@ -81,12 +81,12 @@ def main() -> None:
             '--verbose',            # increase verbosity
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
+            '--exclude=Win10_test_app',
             '--exclude=Hyper-V',
             '--exclude=games',
             '--exclude=Snapshots',
             '--exclude=Logs',
             '--exclude=logs',
-            '--exclude=WIn10_test_app',
             '--log-file=',          # path to log file
             '',                     # source
             full_path_dest_dir
@@ -108,13 +108,13 @@ def main() -> None:
             '--verbose',
             '--copy-links',
             '--out-format="%t %f %''b"',
+            '--exclude=Win10_test_app',
             '--exclude=Hyper-V',
             '--exclude=games',
             '--exclude=Snapshots',
             '--exclude=Logs',
             '--exclude=logs',
             '--log-file=',
-            '--exclude=WIn10_test_app',
             '',
             full_path_dest_dir
         ]
