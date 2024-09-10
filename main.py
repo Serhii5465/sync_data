@@ -1,10 +1,11 @@
 import argparse
+import os
 import sys
 import datetime
 import posixpath
 import subprocess
 from typing import Dict
-from src import mnt, upl
+from src import mnt, upl, constants, mnt
 
 def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
     parser = argparse.ArgumentParser(description='Synchronization files between local storage and external HDD')
@@ -14,9 +15,9 @@ def parse_args(dict_src: Dict[str, any]) -> Dict[str, any]:
         group.add_argument('-n', '--no_vm', action='store_true', help='Copies all files, ignoring directories which storing images of virtual machines')
 
     group.add_argument('-a', '--all', action='store_true', help='Copies all files, which are locating on drive')
-    group.add_argument('-f', '--folder', help='Specifying the name of the folder to be synchronization', 
-                        default=None, 
-                        type=str,
+    group.add_argument('--folder', help='Specifying the name of the folder to be synchronization', 
+                        default=None,
+                        nargs='+',
                         choices=list(dict_src.get('sync_dirs')))
     
     args = vars(parser.parse_args())
@@ -38,14 +39,14 @@ def init_presets(dict_src: Dict[str, any]) -> Dict[str, any]:
     path_logs_dir = posixpath.join(dict_src.get('mnt_point'), 'logs', dict_src.get('log_name'))
     subprocess.run(['mkdir', '-p', path_logs_dir], stderr=sys.stderr, stdout=sys.stdout)
 
-    path_log_file_dry_run = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_DRY_RUN.log')
-    path_log_file_upload = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_UPLOAD.log')
+    path_log_file_dry_run_mode = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_DRY_RUN.log')
+    path_log_file_upload_mode = posixpath.join(path_logs_dir, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + dict_dest.get('label') + '_UPLOAD.log')
 
     return {
         'list_full_path_sync_dirs' : temp_list_full_path_sync_dirs,
         'full_path_dest_dir' : full_path_dest_dir,
-        'path_log_file_dry_run' : path_log_file_dry_run,
-        'path_log_file_upload' : path_log_file_upload
+        'path_log_file_dry_run_mode' : path_log_file_dry_run_mode,
+        'path_log_file_upload_mode' : path_log_file_upload_mode
     }
 
 def main() -> None:
@@ -56,14 +57,16 @@ def main() -> None:
 
     list_full_path_sync_dirs = dict_presets.get('list_full_path_sync_dirs')
     full_path_dest_dir = dict_presets.get('full_path_dest_dir')
-    path_log_file_dry_run = dict_presets.get('path_log_file_dry_run')
-    path_log_file_upload = dict_presets.get('path_log_file_upload')
+    path_log_file_dry_run = dict_presets.get('path_log_file_dry_run_mode')
+    path_log_file_upload = dict_presets.get('path_log_file_upload_mode')
+
+    path_exception_file_rsync = posixpath.join(mnt.conv_path_win_to_unix(os.path.dirname(os.path.realpath(__file__))), constants.FILE_RSYNC_EXCLUSION)
 
     if args['no_vm'] is True:
         list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if 'vm' not in item]
 
     if args['folder']:
-        list_full_path_sync_dirs = list(filter(lambda x: args['folder'] in x, list_full_path_sync_dirs))
+        list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if os.path.basename(item) in args['folder']]
 
     rsync_test_mode_upl = [
             'rsync',
@@ -81,12 +84,7 @@ def main() -> None:
             '--verbose',            # increase verbosity
             '--copy-links',         # transform symlink into referent file/dir
             '--out-format="%t %f %''b"',
-            '--exclude=Win10_test_app',
-            '--exclude=Hyper-V',
-            '--exclude=games',
-            '--exclude=Snapshots',
-            '--exclude=Logs',
-            '--exclude=logs',
+            '--exclude-from=',
             '--log-file=',          # path to log file
             '',                     # source
             full_path_dest_dir
@@ -108,17 +106,16 @@ def main() -> None:
             '--verbose',
             '--copy-links',
             '--out-format="%t %f %''b"',
-            '--exclude=Win10_test_app',
-            '--exclude=Hyper-V',
-            '--exclude=games',
-            '--exclude=Snapshots',
-            '--exclude=Logs',
-            '--exclude=logs',
+            '--exclude-from=',
             '--log-file=',
             '',
             full_path_dest_dir
         ]
     
+    # Appending exception files
+    rsync_test_mode_upl[len(rsync_test_mode_upl) - 4] += path_exception_file_rsync
+    rsync_base_mode_upl[len(rsync_base_mode_upl) - 4] += path_exception_file_rsync
+
     # Appending path to log file to rsync's arguments
     rsync_test_mode_upl[len(rsync_test_mode_upl) - 3] += path_log_file_dry_run
     rsync_base_mode_upl[len(rsync_base_mode_upl) - 3] += path_log_file_upload

@@ -1,3 +1,5 @@
+FILE_RSYNC_EXCLUSION = 'exclude.txt'
+
 #: Wester Digital 1Tb (Maiwo External Enclosure)
 EXT_DRIVE_1 = {
         'uuid': 'E8C8FEE8',
