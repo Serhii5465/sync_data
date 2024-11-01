@@ -2,3 +2,4 @@ test_vm
 Snapshots
 Logs
 logs
+PortableGit
