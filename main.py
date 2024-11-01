@@ -62,8 +62,9 @@ def main() -> None:
 
     path_exception_file_rsync = posixpath.join(mnt.conv_path_win_to_unix(os.path.dirname(os.path.realpath(__file__))), constants.FILE_RSYNC_EXCLUSION)
 
-    if args['no_vm'] is True:
-        list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if 'vm' not in item]
+    if 'no_vm' in args:
+        if args['no_vm'] is True:
+            list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if 'vm' not in item]
 
     if args['folder']:
         list_full_path_sync_dirs = [item for item in list_full_path_sync_dirs if os.path.basename(item) in args['folder']]
@@ -134,4 +135,4 @@ def main() -> None:
     upl.upload_files(dict_rsync_base_mode)
 
 if __name__ == "__main__":
-    main()
+    main()  

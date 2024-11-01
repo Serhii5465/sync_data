@@ -26,8 +26,8 @@ MSI_GF63_SRC_DRIVE = {
     }
 
 DELL_INSPIRON_3576_SRC_DRIVE = { 
-        'uuid': '5837B806',
-        'sync_dirs': ['local' , 'backups', 'gdrive_share'],
+        'uuid': 'E695A871',
+        'sync_dirs': ['system' , 'media', 'portable'],
         'log_name' : 'backup_dell_inspiron_3576',
         'name_dest_dir' : 'dell_inspiron_3576_files'
     }
